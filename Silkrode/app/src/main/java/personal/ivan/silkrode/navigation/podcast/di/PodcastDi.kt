@@ -7,6 +7,9 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import personal.ivan.silkrode.di.ViewModelKey
 import personal.ivan.silkrode.navigation.podcast.view.PodcastActivity
+import personal.ivan.silkrode.navigation.podcast.view.fragment.ChannelListFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.ProgramListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Scope
 
@@ -24,8 +27,28 @@ annotation class PodcastScope
 abstract class PodcastActivityModule {
 
     @PodcastScope
-    @ContributesAndroidInjector(modules = [PodcastViewModelModule::class])
+    @ContributesAndroidInjector(
+        modules = [
+            PodcastViewModelModule::class,
+            PodcastFragmentModule::class]
+    )
     abstract fun contributePodcastActivity(): PodcastActivity
+}
+
+/* ------------------------------ Fragment */
+
+@Suppress("unused")
+@Module
+abstract class PodcastFragmentModule {
+
+    @ContributesAndroidInjector
+    abstract fun contributeChannelListFragment(): ChannelListFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeProgramListFragment(): ProgramListFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributePlayFragment(): PlayFragment
 }
 
 /* ------------------------------ ViewModel */
