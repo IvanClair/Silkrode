@@ -23,6 +23,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textDirection">locale</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
     </style>
 
     <style name="SilkRodeTextView.Headline" parent="SilkRodeTextView">
@@ -47,5 +49,14 @@
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption
         </item>
         <item name="android:textColor">@color/textColorSecondary</item>
+    </style>
+
+    <!-- CardView -->
+    <style name="SilkRodeCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
     </style>
 </resources>
