@@ -4,8 +4,7 @@ import javax.inject.Inject
 
 /*
     TODO Retrofit throws exception if network is unavailable,
-     maybe they will update in future,
-     keep an eye on new release
+     maybe they will update in future, keep an eye on new release
  */
 class PodcastRepository @Inject constructor(private val mService: PodcastService) {
 
