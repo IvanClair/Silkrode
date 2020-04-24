@@ -11,7 +11,7 @@ import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
 
-class ProgramListFragment : DaggerFragment() {
+class CollectionListFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
@@ -23,6 +23,6 @@ class ProgramListFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_program_list, container, false)
+        return inflater.inflate(R.layout.fragment_collection_list, container, false)
     }
 }

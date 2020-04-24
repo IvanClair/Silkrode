@@ -2,9 +2,9 @@ package personal.ivan.silkrode.api
 
 import com.squareup.moshi.Json
 
-/* ------------------------------ Podcast List */
+data class PodcastApiResponse<T>(val data: T?)
 
-data class PodcastRs(val data: PodcastData?)
+/* ------------------------------ Podcast List */
 
 data class PodcastData(@field:Json(name = "podcast") val podcastList: List<Podcast>?)
 
@@ -15,9 +15,7 @@ data class Podcast(
     @field:Json(name = "name") val channelName: String?
 )
 
-/* ------------------------------ Program List */
-
-data class CollectionRs(val data: CollectionData?)
+/* ------------------------------ Collection */
 
 data class CollectionData(val collection: Collection?)
 
