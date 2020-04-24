@@ -16,6 +16,7 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         ViewModelModule::class,
+        RetrofitModule::class,
         PodcastActivityModule::class
     ]
 )
