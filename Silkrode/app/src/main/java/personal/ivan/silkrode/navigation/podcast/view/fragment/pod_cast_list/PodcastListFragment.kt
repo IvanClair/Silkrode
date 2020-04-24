@@ -17,11 +17,17 @@ import javax.inject.Inject
 
 class PodcastListFragment : DaggerFragment() {
 
+    // View Model
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
 
+    // Binding
     private lateinit var mBinding: FragmentPodcastListBinding
+
+    // Adapter
+    @Inject
+    lateinit var podcastListAdapter: PodcastListAdapter
 
     /* ------------------------------ Life Cycle */
 
@@ -65,12 +71,14 @@ class PodcastListFragment : DaggerFragment() {
 
     private fun initRecyclerView() {
         mBinding.recyclerViewPodcast.apply {
+            setHasFixedSize(true)
             layoutManager = GridLayoutManager(context, 2)
-            adapter = PodcastListAdapter(mViewModel = mViewModel)
+            adapter = podcastListAdapter
         }
     }
 
     private fun updateRecyclerView() {
-        mBinding.recyclerViewPodcast.adapter?.notifyDataSetChanged()
+        (mBinding.recyclerViewPodcast.adapter as? PodcastListAdapter)
+            ?.updateDataSource(viewModel = mViewModel)
     }
 }

@@ -7,9 +7,14 @@ import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.databinding.VhPodcastBinding
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.navigation.podcast.viewmodel.getPodcastList
+import personal.ivan.silkrode.util.GlideUtil
+import javax.inject.Inject
 
-class PodcastListAdapter(private val mViewModel: PodcastViewModel) :
+class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     RecyclerView.Adapter<PodcastListAdapter.ViewHolder>() {
+
+    // data source
+    private val mDataSource = mutableListOf<Podcast>()
 
     /* ------------------------------ Override */
 
@@ -26,20 +31,30 @@ class PodcastListAdapter(private val mViewModel: PodcastViewModel) :
             )
         )
 
-    override fun getItemCount(): Int =
-        mViewModel
-            .getPodcastList()
-            ?.size
-            ?: 0
+    override fun getItemCount(): Int = mDataSource.size
 
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int
     ) {
-        mViewModel
+        mDataSource
+            .getOrNull(position)
+            ?.also { holder.bind(data = it, glideUtil = mUtil) }
+    }
+
+    /**
+     * Update data source from [PodcastViewModel]
+     */
+    fun updateDataSource(viewModel: PodcastViewModel) {
+        viewModel
             .getPodcastList()
-            ?.getOrNull(position)
-            ?.also { holder.bind(data = it) }
+            ?.also {
+                mDataSource.apply {
+                    clear()
+                    addAll(it)
+                }
+                notifyDataSetChanged()
+            }
     }
 
     /* ------------------------------ View Holder */
@@ -47,10 +62,12 @@ class PodcastListAdapter(private val mViewModel: PodcastViewModel) :
     class ViewHolder(private val mBinding: VhPodcastBinding) :
         RecyclerView.ViewHolder(mBinding.root) {
 
-        fun bind(data: Podcast) {
+        fun bind(
+            data: Podcast,
+            glideUtil: GlideUtil
+        ) {
             mBinding.apply {
-                // todo
-                imageViewCover
+                glideUtil.loadPodcastCover(imageView = imageViewCover, url = data.coverImgUrl)
                 textViewArtistName.text = data.artistName
                 textViewPodcastName.text = data.channelName
             }

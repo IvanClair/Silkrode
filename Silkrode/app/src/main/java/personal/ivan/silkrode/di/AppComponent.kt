@@ -17,6 +17,7 @@ import javax.inject.Singleton
         AndroidInjectionModule::class,
         ViewModelModule::class,
         RetrofitModule::class,
+        GlideModule::class,
         PodcastActivityModule::class
     ]
 )

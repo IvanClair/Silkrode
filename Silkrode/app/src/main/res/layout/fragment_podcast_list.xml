@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
+    android:paddingBottom="16dp"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
     tools:itemCount="2"
     tools:listitem="@layout/vh_podcast" />
