@@ -1,6 +1,7 @@
 package personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,7 +74,13 @@ class PodcastListFragment : DaggerFragment() {
         mBinding.recyclerViewPodcast.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(context, 2)
-            adapter = podcastListAdapter
+            adapter =
+                podcastListAdapter.also { adapter ->
+                    adapter.setOnItemClickListener(View.OnClickListener {
+                        val index = it.tag as Int
+                        Log.i("", "")
+                    })
+                }
         }
     }
 
