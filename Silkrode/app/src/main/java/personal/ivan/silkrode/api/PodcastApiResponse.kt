@@ -2,6 +2,8 @@ package personal.ivan.silkrode.api
 
 import com.squareup.moshi.Json
 
+/* ------------------------------ General API Response */
+
 data class PodcastApiResponse<T>(val data: T?)
 
 /* ------------------------------ Podcast List */

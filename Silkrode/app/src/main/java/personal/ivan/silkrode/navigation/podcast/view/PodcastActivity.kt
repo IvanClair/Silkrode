@@ -1,7 +1,6 @@
 package personal.ivan.silkrode.navigation.podcast.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -50,16 +49,21 @@ class PodcastActivity : DaggerAppCompatActivity() {
                 this@PodcastActivity,
                 Observer { showApiError() })
 
-            // podcast list from API response
-            podcastList.observe(
+            // Toolbar title text
+            toolbarTitle.observe(
                 this@PodcastActivity,
-                Observer {
-                    Log.i("", "")
-                })
+                Observer { updateToolbarTitle(it) })
         }
     }
 
     /* ------------------------------ UI */
+
+    /**
+     * Update Toolbar title
+     */
+    private fun updateToolbarTitle(title: String) {
+        mBinding.toolbar.title = title
+    }
 
     /**
      * Show or hide loading progress

@@ -1,15 +1,19 @@
 package personal.ivan.silkrode.navigation.podcast.viewmodel
 
+import androidx.annotation.StringRes
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import personal.ivan.silkrode.SilkrodeApplication
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.api.PodcastRepository
 import javax.inject.Inject
 
-class PodcastViewModel @Inject constructor(private val mRepository: PodcastRepository) :
-    ViewModel() {
+class PodcastViewModel @Inject constructor(
+    application: SilkrodeApplication,
+    private val mRepository: PodcastRepository
+) : AndroidViewModel(application) {
 
     // API status
     val apiLoading: MutableLiveData<Boolean> = MutableLiveData()
@@ -23,4 +27,7 @@ class PodcastViewModel @Inject constructor(private val mRepository: PodcastRepos
             if (result == null) apiFail.value = true
             apiLoading.value = false
         }
+
+    // UI
+    val toolbarTitle: MutableLiveData<String> = MutableLiveData()
 }

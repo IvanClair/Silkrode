@@ -10,7 +10,7 @@ import personal.ivan.silkrode.api.PodcastRepository
 import personal.ivan.silkrode.api.PodcastService
 import personal.ivan.silkrode.di.ViewModelKey
 import personal.ivan.silkrode.navigation.podcast.view.PodcastActivity
-import personal.ivan.silkrode.navigation.podcast.view.fragment.PodcastListFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.view.fragment.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel

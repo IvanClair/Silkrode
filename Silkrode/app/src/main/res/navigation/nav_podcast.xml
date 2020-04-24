@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/channelListFragment"
-        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.PodcastListFragment"
+        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment"
         android:label="ChannelListFragment"
         tools:layout="@layout/fragment_podcast_list">
         <action
