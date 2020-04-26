@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.R
@@ -78,6 +79,7 @@ class PodcastListFragment : DaggerFragment() {
                 podcastListAdapter.also { adapter ->
                     adapter.setOnItemClickListener(View.OnClickListener {
                         val index = it.tag as Int
+                        findNavController().navigate(R.id.action_podcastListFragment_to_collectionListFragment)
                         Log.i("", "")
                     })
                 }
