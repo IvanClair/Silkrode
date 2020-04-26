@@ -1,6 +1,5 @@
 package personal.ivan.silkrode.navigation.podcast.viewmodel
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,7 +26,4 @@ class PodcastViewModel @Inject constructor(
             if (result == null) apiFail.value = true
             apiLoading.value = false
         }
-
-    // UI
-    val toolbarTitle: MutableLiveData<String> = MutableLiveData()
 }

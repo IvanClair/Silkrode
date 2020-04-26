@@ -9,12 +9,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
-import personal.ivan.silkrode.navigation.podcast.viewmodel.setToolbarTitle
 import javax.inject.Inject
 
 class PodcastListFragment : DaggerFragment() {
@@ -52,7 +52,6 @@ class PodcastListFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel setToolbarTitle R.string.title_podcast
         initRecyclerView()
         observeLiveData()
     }
@@ -61,6 +60,16 @@ class PodcastListFragment : DaggerFragment() {
 
     private fun observeLiveData() {
         mViewModel.apply {
+
+            // API status - loading
+            apiLoading.observe(
+                viewLifecycleOwner,
+                Observer { switchLoadingProgress(enable = it) })
+
+            // API status - fail
+            apiFail.observe(
+                viewLifecycleOwner,
+                Observer { showApiError() })
 
             // podcast list from API response
             podcastList.observe(
@@ -71,6 +80,27 @@ class PodcastListFragment : DaggerFragment() {
 
     /* ------------------------------ UI */
 
+    /**
+     * Control loading progress bar
+     */
+    private fun switchLoadingProgress(enable: Boolean) {
+        mBinding.progressBarLoading.visibility = if (enable) View.VISIBLE else View.GONE
+    }
+
+    /**
+     * API error dialog
+     */
+    private fun showApiError() {
+        MaterialAlertDialogBuilder(mBinding.root.context)
+            .setTitle(R.string.alert_title)
+            .setMessage(R.string.alert_message)
+            .setPositiveButton(R.string.label_ok, null)
+            .show()
+    }
+
+    /**
+     * Initial podcast list
+     */
     private fun initRecyclerView() {
         mBinding.recyclerViewPodcast.apply {
             setHasFixedSize(true)
@@ -79,15 +109,23 @@ class PodcastListFragment : DaggerFragment() {
                 podcastListAdapter.also { adapter ->
                     adapter.setOnItemClickListener(View.OnClickListener {
                         val index = it.tag as Int
-                        findNavController().navigate(R.id.action_podcastListFragment_to_collectionListFragment)
-                        Log.i("", "")
+                        navigateToCollectionList()
                     })
                 }
         }
     }
 
+    /**
+     * Update podcast list
+     */
     private fun updateRecyclerView() {
         (mBinding.recyclerViewPodcast.adapter as? PodcastListAdapter)
             ?.updateDataSource(viewModel = mViewModel)
+    }
+
+    /* ------------------------------ Navigation */
+
+    private fun navigateToCollectionList() {
+        findNavController().navigate(R.id.action_podcastListFragment_to_collectionListFragment)
     }
 }
