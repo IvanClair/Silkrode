@@ -3,28 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_podcast"
-    app:startDestination="@id/channelListFragment">
+    app:startDestination="@id/PodcastListFragment"
+    tools:ignore="UnusedNavigation">
 
     <fragment
-        android:id="@+id/channelListFragment"
-        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.PodcastListFragment"
+        android:id="@+id/PodcastListFragment"
+        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment"
         android:label="ChannelListFragment"
         tools:layout="@layout/fragment_podcast_list">
         <action
-            android:id="@+id/action_channelListFragment_to_programListFragment"
-            app:destination="@id/programListFragment"
+            android:id="@+id/action_podcastListFragment_to_collectionListFragment"
+            app:destination="@id/collectionListFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/programListFragment"
+        android:id="@+id/collectionListFragment"
         android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.CollectionListFragment"
         android:label="ProgramListFragment"
         tools:layout="@layout/fragment_collection_list">
         <action
-            android:id="@+id/action_programListFragment_to_playFragment"
+            android:id="@+id/action_collectionListFragment_to_playFragment"
             app:destination="@id/playFragment"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"

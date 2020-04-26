@@ -2,6 +2,8 @@ package personal.ivan.silkrode.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -11,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import personal.ivan.silkrode.BuildConfig
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.SilkrodeApplication
+import personal.ivan.silkrode.util.GlideUtil
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -87,4 +90,47 @@ object RetrofitModule {
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor()
             .apply { level = HttpLoggingInterceptor.Level.BODY }
+}
+
+/* ------------------------------ Glide */
+
+@Module
+object GlideModule {
+
+    /**
+     * [RequestOptions]
+     */
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideGlideRequestOptions() =
+        RequestOptions()
+            .placeholder(R.drawable.ic_launcher_foreground)
+            .error(R.drawable.ic_launcher_foreground)
+            .fallback(R.drawable.ic_launcher_foreground)
+
+
+    /**
+     * [DrawableTransitionOptions]
+     */
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideGlideTransitionOptions() =
+        DrawableTransitionOptions.withCrossFade()
+
+    /**
+     * [GlideUtil]
+     */
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideGlideUtil(
+        options: RequestOptions,
+        transitionOptions: DrawableTransitionOptions
+    ) =
+        GlideUtil(
+            mRequestOptions = options,
+            mTransitionOptions = transitionOptions
+        )
 }
