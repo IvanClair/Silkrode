@@ -72,8 +72,9 @@ dependencies {
     // Fragment
     implementation "androidx.fragment:fragment-ktx:1.2.4"
 
-    // Life Cycle - ViewModel and LiveData
+    // Life Cycle
     def lifecycle_version = '2.2.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 

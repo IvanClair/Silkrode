@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
@@ -19,7 +17,6 @@ import personal.ivan.silkrode.databinding.FragmentCollectionListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.extension.switchLoadingProcess
-import personal.ivan.silkrode.navigation.podcast.model.CollectionVhBindingModel
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.GlideUtil
@@ -86,8 +83,6 @@ class CollectionListFragment : DaggerFragment() {
         setToolbarTitle()
         initRecyclerView()
         observeLiveData()
-        // request API
-        mViewModel.requestCollectionApi(id = mArguments.id)
     }
 
     /* ------------------------------ Observe LiveData */
@@ -180,13 +175,9 @@ class CollectionListFragment : DaggerFragment() {
 
             // set up adapter
             adapter = collectionListAdapter
-            collectionListAdapter.setOnItemClickListener(object :
-                CollectionListAdapter.OnContentItemClickListener {
-                override fun onClick(
-                    textView: TextView,
-                    index: Int
-                ) {
-                    navigateToPlay(textView = textView, index = index)
+            collectionListAdapter.setOnItemClickListener(View.OnClickListener {
+                if (CollectionListAdapter.allowClick()) {
+                    navigateToPlay(index = it.tag as Int)
                 }
             })
 
@@ -212,13 +203,7 @@ class CollectionListFragment : DaggerFragment() {
     /**
      * Navigate to [PlayFragment]
      */
-    private fun navigateToPlay(
-        textView: TextView,
-        index: Int
-    ) {
-        findNavController().navigate(
-            CollectionListFragmentDirections.navigateToPlay(index = index),
-            FragmentNavigatorExtras(textView to index.toString())
-        )
+    private fun navigateToPlay(index: Int) {
+        findNavController().navigate(CollectionListFragmentDirections.navigateToPlay(index = index))
     }
 }

@@ -56,6 +56,15 @@
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
+    <style name="SilkRodeTextView.ContentDescription" parent="SilkRodeTextView">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2
+        </item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+    </style>
+
     <style name="SilkRodeTextView.DateInformation" parent="SilkRodeTextView">
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption
         </item>

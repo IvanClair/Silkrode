@@ -20,6 +20,21 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     // Listener
     private var mListener: OnPodcastItemClickListener? = null
 
+    /*
+        Prevent double click
+     */
+    companion object {
+        var lastClickTime = 0L
+        fun allowClick(): Boolean {
+            val now = System.currentTimeMillis()
+            if (now > lastClickTime + 500) {
+                lastClickTime = now
+                return true
+            }
+            return false
+        }
+    }
+
     /* ------------------------------ Interface */
 
     interface OnPodcastItemClickListener {
@@ -92,10 +107,12 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
         ) {
             mBinding.apply {
                 root.setOnClickListener {
-                    listener?.onClick(
-                        imageView = imageViewCover,
-                        id = data.id ?: ""
-                    )
+                    if (allowClick()) {
+                        listener?.onClick(
+                            imageView = imageViewCover,
+                            id = data.id ?: ""
+                        )
+                    }
                 }
                 imageViewCover.apply {
                     transitionName = data.id
