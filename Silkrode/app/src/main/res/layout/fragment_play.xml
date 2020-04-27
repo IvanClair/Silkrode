@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/holo_orange_dark">
+    android:layout_height="match_parent">
 
+    <!--  App Bar  -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/abc_vector_test"
+            tools:ignore="PrivateResource" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:id="@+id/text_view_content_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

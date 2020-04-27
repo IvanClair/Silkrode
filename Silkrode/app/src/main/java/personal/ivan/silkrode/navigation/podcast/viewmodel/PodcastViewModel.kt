@@ -80,4 +80,16 @@ class PodcastViewModel @Inject constructor(
      */
     fun getCollectionList(): List<CollectionVhBindingModel>? =
         collectionBindingModel.value?.vhModelList
+
+    /**
+     * Get selected cover image
+     */
+    fun getSelectedCoverImageUrl(): String =
+        collectionBindingModel.value?.coverImageUrl ?: ""
+
+    /**
+     * Get selected content
+     */
+    fun getSelectedContent(index: Int): CollectionVhBindingModel.ContentVhBindingModel? =
+        getCollectionList()?.getOrNull(index) as? CollectionVhBindingModel.ContentVhBindingModel
 }

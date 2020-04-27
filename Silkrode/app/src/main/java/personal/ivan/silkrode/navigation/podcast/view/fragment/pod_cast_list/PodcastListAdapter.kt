@@ -14,6 +14,7 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     RecyclerView.Adapter<PodcastListAdapter.ViewHolder>() {
 
     // Data Source
+    // todo easy to extend, e.g. sort by artist, topic ... etc
     private val mDataList = mutableListOf<Podcast>()
 
     // Listener

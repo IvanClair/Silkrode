@@ -1,8 +1,8 @@
 package personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import personal.ivan.silkrode.databinding.VhCollectionContentBinding
@@ -13,10 +13,17 @@ import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.CollectionViewHolder>() {
 
     // Data Source
-    private val mDataList: MutableList<CollectionVhBindingModel> = mutableListOf()
+    // todo easy to extend, e.g. sort by season, topic ... etc
+    private var mDataList: MutableList<CollectionVhBindingModel> = mutableListOf()
 
     // Listener
-    private var mListener: View.OnClickListener? = null
+    private var mListener: OnContentItemClickListener? = null
+
+    /* ------------------------------ Interface */
+
+    interface OnContentItemClickListener {
+        fun onClick(textView: TextView, index: Int)
+    }
 
     /* ------------------------------ Override */
 
@@ -91,7 +98,7 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
     /**
      * Item click listener
      */
-    fun setOnItemClickListener(listener: View.OnClickListener?) {
+    fun setOnItemClickListener(listener: OnContentItemClickListener?) {
         this.mListener = listener
     }
 
@@ -125,15 +132,23 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
             fun bind(
                 data: CollectionVhBindingModel,
                 index: Int,
-                listener: View.OnClickListener?
+                listener: OnContentItemClickListener?
             ) {
                 if (data is CollectionVhBindingModel.ContentVhBindingModel) {
                     mBinding.apply {
                         root.apply {
                             tag = index
-                            setOnClickListener(listener)
+                            setOnClickListener {
+                                listener?.onClick(
+                                    textView = textViewContentTitle,
+                                    index = index
+                                )
+                            }
                         }
-                        textViewTitle.text = data.title
+                        textViewContentTitle.apply {
+                            transitionName = index.toString()
+                            text = data.title
+                        }
                         textViewPublishDate.text = data.publishDate
                     }
                 }

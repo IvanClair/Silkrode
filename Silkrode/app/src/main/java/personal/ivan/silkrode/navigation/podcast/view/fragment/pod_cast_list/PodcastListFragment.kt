@@ -89,27 +89,25 @@ class PodcastListFragment : DaggerFragment() {
         mBinding.recyclerViewPodcast.apply {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(context, 2)
-            adapter =
-                podcastListAdapter.also { adapter ->
 
-                    // view holder click listener
-                    adapter.setOnItemClickListener(object :
-                        PodcastListAdapter.OnPodcastItemClickListener {
-                        override fun onClick(
-                            imageView: ImageView,
-                            id: String
-                        ) {
-                            navigateToCollectionList(imageView = imageView, id = id)
-                        }
-                    })
-
-                    // return transition
-                    postponeEnterTransition()
-                    viewTreeObserver.addOnPreDrawListener {
-                        startPostponedEnterTransition()
-                        true
-                    }
+            // set up adapter
+            adapter = podcastListAdapter
+            podcastListAdapter.setOnItemClickListener(object :
+                PodcastListAdapter.OnPodcastItemClickListener {
+                override fun onClick(
+                    imageView: ImageView,
+                    id: String
+                ) {
+                    navigateToCollectionList(imageView = imageView, id = id)
                 }
+            })
+
+            // return transition
+            postponeEnterTransition()
+            viewTreeObserver.addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
         }
     }
 

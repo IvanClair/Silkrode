@@ -9,8 +9,8 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/text_view_title"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_view_content_title"
             style="@style/SilkRodeTextView.ContentTitle"
             android:layout_width="0dp"
             app:layout_constraintEnd_toStartOf="@+id/image_view_play"
@@ -18,13 +18,13 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="What happens when a Silicon Valley technologist works for the government | Matt Cutts" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_view_publish_date"
             style="@style/SilkRodeTextView.DateInformation"
             android:layout_width="0dp"
-            app:layout_constraintEnd_toEndOf="@+id/text_view_title"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_content_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_title"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_content_title"
             tools:text="Mon, 09 Mar 2020" />
 
         <ImageView
@@ -36,6 +36,6 @@
             android:tint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="@+id/text_view_publish_date"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_view_title" />
+            app:layout_constraintTop_toTopOf="@+id/text_view_content_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -6,14 +6,14 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_view_collection_name"
         style="@style/SilkRodeTextView.CollectionTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="TED Talks Daily" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_view_release_date"
         style="@style/SilkRodeTextView.DateInformation"
         app:layout_constraintStart_toStartOf="parent"

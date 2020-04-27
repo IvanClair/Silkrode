@@ -1,5 +1,7 @@
 package personal.ivan.silkrode.navigation.podcast.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.annotation.IntDef
 import personal.ivan.silkrode.api.Collection
 import personal.ivan.silkrode.api.ContentFeed
@@ -90,11 +92,7 @@ sealed class CollectionVhBindingModel(@CollectionViewType val viewType: Int) {
         val title: String,
         val description: String,
         val publishDate: String
-    ) : CollectionVhBindingModel(viewType = VIEW_TYPE_CONTENT_FEED) {
-
-        companion object {
-            const val DATE_PATTEN = "EEE, dd MMM yyyy"
-        }
+    ) : CollectionVhBindingModel(viewType = VIEW_TYPE_CONTENT_FEED), Parcelable {
 
         constructor(
             data: ContentFeed,
@@ -110,5 +108,30 @@ sealed class CollectionVhBindingModel(@CollectionViewType val viewType: Int) {
                 outputPattern = DATE_PATTEN
             )
         )
+
+        constructor(parcel: Parcel) : this(
+            parcel.readString() ?: "",
+            parcel.readString() ?: "",
+            parcel.readString() ?: "",
+            parcel.readString() ?: ""
+        )
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(contentUrl)
+            parcel.writeString(title)
+            parcel.writeString(description)
+            parcel.writeString(publishDate)
+        }
+
+        override fun describeContents(): Int = 0
+
+        companion object CREATOR : Parcelable.Creator<ContentVhBindingModel> {
+            const val DATE_PATTEN = "EEE, dd MMM yyyy"
+
+            override fun createFromParcel(parcel: Parcel): ContentVhBindingModel =
+                ContentVhBindingModel(parcel)
+
+            override fun newArray(size: Int): Array<ContentVhBindingModel?> = arrayOfNulls(size)
+        }
     }
 }

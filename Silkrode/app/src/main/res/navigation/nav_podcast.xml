@@ -21,7 +21,7 @@
         android:label="ProgramListFragment"
         tools:layout="@layout/fragment_collection_list">
         <action
-            android:id="@+id/action_collectionListFragment_to_playFragment"
+            android:id="@+id/navigateToPlay"
             app:destination="@id/playFragment" />
         <argument
             android:name="id"
@@ -31,5 +31,10 @@
         android:id="@+id/playFragment"
         android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment"
         android:label="PlayFragment"
-        tools:layout="@layout/fragment_play" />
+        tools:layout="@layout/fragment_play">
+
+        <argument
+            android:name="index"
+            app:argType="integer" />
+    </fragment>
 </navigation>
