@@ -4,21 +4,43 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import dagger.Binds
-import dagger.MapKey
-import dagger.Module
-import dagger.Provides
+import dagger.*
+import dagger.android.AndroidInjectionModule
+import dagger.android.AndroidInjector
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import personal.ivan.silkrode.BuildConfig
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.SilkrodeApplication
+import personal.ivan.silkrode.navigation.podcast.di.PodcastActivityModule
+import personal.ivan.silkrode.util.DateFormatUtil
 import personal.ivan.silkrode.util.GlideUtil
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import kotlin.reflect.KClass
+
+/* ------------------------------ Application Scope Component */
+
+@Singleton
+@Component(
+    modules = [
+        AndroidInjectionModule::class,
+        ViewModelModule::class,
+        RetrofitModule::class,
+        GlideModule::class,
+        DateFormatModule::class,
+        PodcastActivityModule::class
+    ]
+)
+interface AppComponent : AndroidInjector<SilkrodeApplication> {
+
+    @Component.Factory
+    interface Factory {
+        fun create(@BindsInstance application: SilkrodeApplication): AppComponent
+    }
+}
 
 /* ------------------------------ ViewModel */
 
@@ -133,4 +155,15 @@ object GlideModule {
             mRequestOptions = options,
             mTransitionOptions = transitionOptions
         )
+}
+
+/* ------------------------------ Date Format */
+
+@Module
+object DateFormatModule {
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideDateFormatUtil() = DateFormatUtil()
 }

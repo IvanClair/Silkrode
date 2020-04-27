@@ -43,6 +43,25 @@
         <item name="android:textColor">@color/textColorSecondary</item>
     </style>
 
+    <style name="SilkRodeTextView.CollectionTitle" parent="SilkRodeTextView">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline4
+        </item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="SilkRodeTextView.ContentTitle" parent="SilkRodeTextView">
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1
+        </item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="SilkRodeTextView.DateInformation" parent="SilkRodeTextView">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption
+        </item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+    </style>
+
     <!-- CardView -->
     <style name="SilkRodeCardView" parent="Widget.MaterialComponents.CardView">
         <item name="android:layout_width">match_parent</item>
@@ -51,5 +70,11 @@
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginEnd">8dp</item>
         <item name="rippleColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="SilkRodeCardView.FullWidth" parent="SilkRodeCardView">
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
     </style>
 </resources>

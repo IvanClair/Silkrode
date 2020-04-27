@@ -1,13 +1,12 @@
 package personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.databinding.VhPodcastBinding
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
-import personal.ivan.silkrode.navigation.podcast.viewmodel.getPodcastList
 import personal.ivan.silkrode.util.GlideUtil
 import javax.inject.Inject
 
@@ -15,10 +14,17 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     RecyclerView.Adapter<PodcastListAdapter.ViewHolder>() {
 
     // Data Source
-    private val mDataSource = mutableListOf<Podcast>()
+    // todo easy to extend, e.g. sort by artist, topic ... etc
+    private val mDataList = mutableListOf<Podcast>()
 
     // Listener
-    private var listener: View.OnClickListener? = null
+    private var mListener: OnPodcastItemClickListener? = null
+
+    /* ------------------------------ Interface */
+
+    interface OnPodcastItemClickListener {
+        fun onClick(imageView: ImageView, id: String)
+    }
 
     /* ------------------------------ Override */
 
@@ -35,20 +41,19 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
             )
         )
 
-    override fun getItemCount(): Int = mDataSource.size
+    override fun getItemCount(): Int = mDataList.size
 
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int
     ) {
-        mDataSource
+        mDataList
             .getOrNull(position)
             ?.also {
                 holder.bind(
                     data = it,
                     glideUtil = mUtil,
-                    index = position,
-                    listener = listener
+                    listener = mListener
                 )
             }
     }
@@ -60,7 +65,7 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
         viewModel
             .getPodcastList()
             ?.also {
-                mDataSource.apply {
+                mDataList.apply {
                     clear()
                     addAll(it)
                 }
@@ -71,8 +76,8 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     /**
      * Item click listener
      */
-    fun setOnItemClickListener(listener: View.OnClickListener) {
-        this.listener = listener
+    fun setOnItemClickListener(listener: OnPodcastItemClickListener?) {
+        this.mListener = listener
     }
 
     /* ------------------------------ View Holder */
@@ -83,15 +88,19 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
         fun bind(
             data: Podcast,
             glideUtil: GlideUtil,
-            index: Int,
-            listener: View.OnClickListener?
+            listener: OnPodcastItemClickListener?
         ) {
             mBinding.apply {
-                root.apply {
-                    tag = index
-                    setOnClickListener(listener)
+                root.setOnClickListener {
+                    listener?.onClick(
+                        imageView = imageViewCover,
+                        id = data.id ?: ""
+                    )
                 }
-                glideUtil.loadPodcastCover(imageView = imageViewCover, url = data.coverImgUrl)
+                imageViewCover.apply {
+                    transitionName = data.id
+                    glideUtil.loadPodcastCover(imageView = this, url = data.coverImgUrl)
+                }
                 textViewArtistName.text = data.artistName
                 textViewPodcastName.text = data.channelName
             }
