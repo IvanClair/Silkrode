@@ -1,12 +1,13 @@
 package personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -107,10 +108,23 @@ class PodcastListFragment : DaggerFragment() {
             layoutManager = GridLayoutManager(context, 2)
             adapter =
                 podcastListAdapter.also { adapter ->
-                    adapter.setOnItemClickListener(View.OnClickListener {
-                        val index = it.tag as Int
-                        navigateToCollectionList()
+
+                    // view holder click listener
+                    adapter.setOnItemClickListener(object :
+                        PodcastListAdapter.OnPodcastItemClickListener {
+                        override fun onClick(
+                            imageView: ImageView,
+                            id: String
+                        ) {
+                            navigateToCollectionList(imageView = imageView, id = id)
+                        }
                     })
+
+                    // return transition
+                    viewTreeObserver.addOnPreDrawListener {
+                        startPostponedEnterTransition()
+                        true
+                    }
                 }
         }
     }
@@ -125,7 +139,13 @@ class PodcastListFragment : DaggerFragment() {
 
     /* ------------------------------ Navigation */
 
-    private fun navigateToCollectionList() {
-        findNavController().navigate(R.id.action_podcastListFragment_to_collectionListFragment)
+    private fun navigateToCollectionList(
+        imageView: ImageView,
+        id: String
+    ) {
+        findNavController().navigate(
+            PodcastListFragmentDirections.navigateToCollectionList(id = id),
+            FragmentNavigatorExtras(imageView to id)
+        )
     }
 }

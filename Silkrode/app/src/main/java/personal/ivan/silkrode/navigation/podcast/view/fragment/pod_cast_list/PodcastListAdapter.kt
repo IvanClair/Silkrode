@@ -1,8 +1,8 @@
 package personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.databinding.VhPodcastBinding
@@ -18,7 +18,13 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     private val mDataSource = mutableListOf<Podcast>()
 
     // Listener
-    private var listener: View.OnClickListener? = null
+    private var listener: OnPodcastItemClickListener? = null
+
+    /* ------------------------------ Interface */
+
+    interface OnPodcastItemClickListener {
+        fun onClick(imageView: ImageView, id: String)
+    }
 
     /* ------------------------------ Override */
 
@@ -47,7 +53,6 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
                 holder.bind(
                     data = it,
                     glideUtil = mUtil,
-                    index = position,
                     listener = listener
                 )
             }
@@ -71,7 +76,7 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     /**
      * Item click listener
      */
-    fun setOnItemClickListener(listener: View.OnClickListener) {
+    fun setOnItemClickListener(listener: OnPodcastItemClickListener?) {
         this.listener = listener
     }
 
@@ -83,15 +88,19 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
         fun bind(
             data: Podcast,
             glideUtil: GlideUtil,
-            index: Int,
-            listener: View.OnClickListener?
+            listener: OnPodcastItemClickListener?
         ) {
             mBinding.apply {
-                root.apply {
-                    tag = index
-                    setOnClickListener(listener)
+                root.setOnClickListener {
+                    listener?.onClick(
+                        imageView = imageViewCover,
+                        id = data.id ?: ""
+                    )
                 }
-                glideUtil.loadPodcastCover(imageView = imageViewCover, url = data.coverImgUrl)
+                imageViewCover.apply {
+                    transitionName = data.id
+                    glideUtil.loadPodcastCover(imageView = this, url = data.coverImgUrl)
+                }
                 textViewArtistName.text = data.artistName
                 textViewPodcastName.text = data.channelName
             }

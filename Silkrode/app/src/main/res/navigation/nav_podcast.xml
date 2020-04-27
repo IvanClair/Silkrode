@@ -12,12 +12,8 @@
         android:label="ChannelListFragment"
         tools:layout="@layout/fragment_podcast_list">
         <action
-            android:id="@+id/action_podcastListFragment_to_collectionListFragment"
-            app:destination="@id/collectionListFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/navigate_to_collection_list"
+            app:destination="@id/collectionListFragment" />
     </fragment>
     <fragment
         android:id="@+id/collectionListFragment"
@@ -26,11 +22,10 @@
         tools:layout="@layout/fragment_collection_list">
         <action
             android:id="@+id/action_collectionListFragment_to_playFragment"
-            app:destination="@id/playFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit" />
+            app:destination="@id/playFragment" />
+        <argument
+            android:name="id"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/playFragment"
