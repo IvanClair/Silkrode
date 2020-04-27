@@ -15,7 +15,7 @@ import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.extension.switchLoadingProcess
-import personal.ivan.silkrode.navigation.podcast.view.fragment.CollectionListFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
 
@@ -26,12 +26,12 @@ class PodcastListFragment : DaggerFragment() {
     lateinit var viewModelFactory: AppViewModelFactory
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
 
-    // Binding
-    private lateinit var mBinding: FragmentPodcastListBinding
-
     // Adapter
     @Inject
     lateinit var podcastListAdapter: PodcastListAdapter
+
+    // View Binding
+    private lateinit var mBinding: FragmentPodcastListBinding
 
     /* ------------------------------ Life Cycle */
 

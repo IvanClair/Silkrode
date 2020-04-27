@@ -1,4 +1,4 @@
-package personal.ivan.silkrode.navigation.podcast.view.fragment
+package personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +17,7 @@ import personal.ivan.silkrode.databinding.FragmentCollectionListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.extension.switchLoadingProcess
+import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.GlideUtil
 import javax.inject.Inject
@@ -28,12 +29,16 @@ class CollectionListFragment : DaggerFragment() {
     lateinit var viewModelFactory: AppViewModelFactory
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
 
-    // View Binding
-    private lateinit var mBinding: FragmentCollectionListBinding
+    // Adapter
+    @Inject
+    lateinit var collectionListAdapter: CollectionListAdapter
 
     // Glide
     @Inject
     lateinit var glideUtil: GlideUtil
+
+    // View Binding
+    private lateinit var mBinding: FragmentCollectionListBinding
 
     // Argument
     private val mArguments by navArgs<CollectionListFragmentArgs>()
@@ -98,10 +103,11 @@ class CollectionListFragment : DaggerFragment() {
                 Observer { context?.showApiErrorAlert() })
 
             // collection from API response
-            collection.observe(
+            collectionBindingModel.observe(
                 viewLifecycleOwner,
                 Observer {
-                    loadCoverImage(url = it.bigCoverImgUrl ?: "")
+                    loadCoverImage(url = it.coverImageUrl)
+                    updateRecyclerView()
                 })
         }
     }
@@ -167,12 +173,15 @@ class CollectionListFragment : DaggerFragment() {
      * Initial collection feed list
      */
     private fun initRecyclerView() {
+        mBinding.recyclerViewCollection.adapter = collectionListAdapter
     }
 
     /**
      * Update collection feed list
      */
     private fun updateRecyclerView() {
+        (mBinding.recyclerViewCollection.adapter as? CollectionListAdapter)
+            ?.updateDataSource(viewModel = mViewModel)
     }
 
     /* ------------------------------ Navigation */
