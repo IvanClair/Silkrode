@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.databinding.VhPodcastBinding
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
-import personal.ivan.silkrode.navigation.podcast.viewmodel.getPodcastList
 import personal.ivan.silkrode.util.GlideUtil
 import javax.inject.Inject
 

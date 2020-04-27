@@ -10,11 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.DaggerFragment
-import personal.ivan.silkrode.R
 import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
+import personal.ivan.silkrode.extension.showApiErrorAlert
+import personal.ivan.silkrode.extension.switchLoadingProcess
+import personal.ivan.silkrode.navigation.podcast.view.fragment.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
 
@@ -65,12 +66,12 @@ class PodcastListFragment : DaggerFragment() {
             // API status - loading
             apiLoading.observe(
                 viewLifecycleOwner,
-                Observer { switchLoadingProgress(enable = it) })
+                Observer { mBinding.progressBarLoading switchLoadingProcess it })
 
             // API status - fail
             apiFail.observe(
                 viewLifecycleOwner,
-                Observer { showApiError() })
+                Observer { context?.showApiErrorAlert() })
 
             // podcast list from API response
             podcastList.observe(
@@ -80,24 +81,6 @@ class PodcastListFragment : DaggerFragment() {
     }
 
     /* ------------------------------ UI */
-
-    /**
-     * Control loading progress bar
-     */
-    private fun switchLoadingProgress(enable: Boolean) {
-        mBinding.progressBarLoading.visibility = if (enable) View.VISIBLE else View.GONE
-    }
-
-    /**
-     * API error dialog
-     */
-    private fun showApiError() {
-        MaterialAlertDialogBuilder(mBinding.root.context)
-            .setTitle(R.string.alert_title)
-            .setMessage(R.string.alert_message)
-            .setPositiveButton(R.string.label_ok, null)
-            .show()
-    }
 
     /**
      * Initial podcast list
@@ -121,6 +104,7 @@ class PodcastListFragment : DaggerFragment() {
                     })
 
                     // return transition
+                    postponeEnterTransition()
                     viewTreeObserver.addOnPreDrawListener {
                         startPostponedEnterTransition()
                         true
@@ -139,6 +123,9 @@ class PodcastListFragment : DaggerFragment() {
 
     /* ------------------------------ Navigation */
 
+    /**
+     * Navigate to [CollectionListFragment]
+     */
     private fun navigateToCollectionList(
         imageView: ImageView,
         id: String

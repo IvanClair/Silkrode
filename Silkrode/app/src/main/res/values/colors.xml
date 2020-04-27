@@ -6,4 +6,6 @@
     <color name="colorBackground">#F5F5F5</color>
     <color name="textColorPrimary">#1E3945</color>
     <color name="textColorSecondary">#50656E</color>
+    <color name="contentScrimColor">@color/colorPrimary</color>
+    <color name="navIconColor">@android:color/black</color>
 </resources>

@@ -14,9 +14,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/contentScrimColor"
             app:expandedTitleGravity="bottom"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -43,6 +44,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/abc_vector_test"
+                app:title="@string/title_all_episodes"
                 tools:ignore="PrivateResource">
 
                 <ProgressBar
@@ -56,16 +58,14 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <!--  Collection List  -->
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/recycler_view_collection"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:clipToPadding="false"-->
-    <!--        android:paddingBottom="16dp"-->
-    <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout"-->
-    <!--        tools:itemCount="2"-->
-    <!--        tools:listitem="@layout/vh_podcast" />-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_collection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:itemCount="2"
+        tools:listitem="@layout/vh_podcast" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
