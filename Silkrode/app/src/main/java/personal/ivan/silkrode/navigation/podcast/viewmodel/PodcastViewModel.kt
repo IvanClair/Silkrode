@@ -1,5 +1,6 @@
 package personal.ivan.silkrode.navigation.podcast.viewmodel
 
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,7 @@ import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.api.PodcastRepository
 import personal.ivan.silkrode.navigation.podcast.model.CollectionBindingModel
 import personal.ivan.silkrode.navigation.podcast.model.CollectionVhBindingModel
+import personal.ivan.silkrode.service.PodcastAudioService
 import personal.ivan.silkrode.util.DateFormatUtil
 import javax.inject.Inject
 
@@ -66,6 +68,62 @@ class PodcastViewModel @Inject constructor(
                 )
             collectionBindingModel.postValue(bindingModel)
         }
+    }
+
+    /* ------------------------------ Service */
+
+    /**
+     * Start the podcast
+     */
+    fun startPodcast() {
+        val url =
+            "https://dts.podtrac.com/redirect.mp3/download.ted.com/talks/MattCutts_2019U.mp3?apikey=172BB350-0207&prx_url=https://dovetail.prxu.org/70/1b56e1b3-9eaa-4918-a9a3-f69650636d5c/MattCutts_2019U_VO_Intro.mp3"
+        startPodcastService(
+            intent =
+            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_START)
+                .apply { putExtra(PodcastAudioService.PODCAST_BUNDLE_TAG_URL, url) }
+        )
+    }
+
+    /**
+     * Pause the podcast
+     */
+    fun pausePodcast() {
+        startPodcastService(
+            intent =
+            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_PAUSE)
+        )
+    }
+
+    /**
+     * Resume the podcast
+     */
+    fun resumePodcast() {
+        startPodcastService(
+            intent =
+            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_RESUME)
+        )
+    }
+
+    /**
+     * Seek progress of the podcast
+     */
+    fun seekPodcast(second: Int) {
+        startPodcastService(
+            intent =
+            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_SEEK_TO)
+                .apply { putExtra(PodcastAudioService.PODCAST_BUNDLE_TAG_SEEK_TO, second) }
+        )
+    }
+
+    private fun getPodcastServiceIntent(@PodcastAudioService.Companion.PodcastServiceAction actionName: String): Intent =
+        Intent(
+            getApplication<SilkrodeApplication>(),
+            PodcastAudioService::class.java
+        ).apply { action = actionName }
+
+    private fun startPodcastService(intent: Intent) {
+        getApplication<SilkrodeApplication>().startService(intent)
     }
 
     /* ------------------------------ Getter */

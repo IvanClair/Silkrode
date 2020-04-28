@@ -1,6 +1,7 @@
 package personal.ivan.silkrode.navigation.podcast.view
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.activity.viewModels
 import dagger.android.support.DaggerAppCompatActivity
 import personal.ivan.silkrode.databinding.ActivityPodcastBinding
@@ -25,16 +26,11 @@ class PodcastActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-        observeLiveData()
+        mViewModel.startPodcast()
+
+        Handler().postDelayed({
+            mViewModel.seekPodcast(-2)
+        }, 10 * 1000)
     }
 
-    /* ------------------------------ Observe LiveData */
-
-    /**
-     * Observe LiveData in [PodcastViewModel]
-     */
-    private fun observeLiveData() {
-        mViewModel.apply {
-        }
-    }
 }
