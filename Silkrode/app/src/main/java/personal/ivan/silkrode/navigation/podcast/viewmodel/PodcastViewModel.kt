@@ -170,6 +170,11 @@ class PodcastViewModel @Inject constructor(
         mPodcastService?.seekTo(seconds = seconds, direct = direct)
     }
 
+    /**
+     * Get current duration of the podcast
+     */
+    fun getCurrentPodcastDuration() = mPodcastService?.getCurrentDuration() ?: 0
+
     /* ------------------------------ Getter */
 
     /**

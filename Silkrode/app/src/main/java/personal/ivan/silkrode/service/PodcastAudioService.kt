@@ -8,6 +8,9 @@ import android.media.MediaPlayer.SEEK_CLOSEST
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class PodcastAudioService : Service() {
 
@@ -85,6 +88,11 @@ class PodcastAudioService : Service() {
     fun isPlaying() = mPlayer.isPlaying
 
     /**
+     * Get current duration of the player
+     */
+    fun getCurrentDuration() = mPlayer.currentPosition
+
+    /**
      * Pause the player
      */
     fun pausePlayer() {
@@ -105,14 +113,20 @@ class PodcastAudioService : Service() {
         seconds: Int,
         direct: Boolean
     ) {
-        if (mPlayer.isPlaying) {
-            val duration = mPlayer.duration
-            val adjustedPosition = if (direct) seconds else mPlayer.currentPosition + seconds * 1000
-            val finalPosition = if (adjustedPosition > duration) duration else adjustedPosition
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mPlayer.seekTo(finalPosition.toLong(), SEEK_CLOSEST)
-            } else {
-                mPlayer.seekTo(finalPosition)
+        GlobalScope.launch(Dispatchers.IO) {
+            if (mPlayer.isPlaying) {
+                val duration = mPlayer.duration
+                val adjustedPosition =
+                    if (direct) seconds
+                    else mPlayer.currentPosition + seconds * 1000
+                val finalPosition =
+                    if (adjustedPosition > duration) duration
+                    else adjustedPosition
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    mPlayer.seekTo(finalPosition.toLong(), SEEK_CLOSEST)
+                } else {
+                    mPlayer.seekTo(finalPosition)
+                }
             }
         }
     }

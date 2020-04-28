@@ -1,7 +1,7 @@
 package personal.ivan.silkrode.navigation.podcast.view
 
 import android.os.Bundle
-import android.transition.TransitionManager
+import android.os.CountDownTimer
 import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -35,6 +35,7 @@ class PodcastActivity : DaggerAppCompatActivity() {
     }
 
     private var force = true
+    private var mTimer: CountDownTimer? = null
 
     /* ------------------------------ Life Cycle */
 
@@ -85,7 +86,7 @@ class PodcastActivity : DaggerAppCompatActivity() {
             // total duration of the podcast
             totalDuration.observe(
                 this@PodcastActivity,
-                Observer { setTotalDuration(it) })
+                Observer { setTotalDuration(duration = it) })
         }
     }
 
@@ -125,9 +126,10 @@ class PodcastActivity : DaggerAppCompatActivity() {
                 }
 
                 override fun onStopTrackingTouch(p0: SeekBar?) {
-                    val duration = p0?.progress ?: 0
-                    mViewModel.seekPodcast(seconds = duration, direct = true)
-                    setCurrentDuration(duration = duration)
+                    mViewModel.seekPodcast(
+                        seconds = p0?.progress ?: 0,
+                        direct = true
+                    )
                 }
             })
         }
@@ -142,8 +144,11 @@ class PodcastActivity : DaggerAppCompatActivity() {
     }
 
     private fun setCurrentDuration(duration: Int) {
-        mBinding.textViewCurrentDuration.text =
-            dateUtil.formatPlayerDuration(duration = duration.toLong())
+        mBinding.apply {
+            seekBarPodCast.progress = duration
+            textViewCurrentDuration.text =
+                dateUtil.formatPlayerDuration(duration = duration.toLong())
+        }
 
     }
 
@@ -152,6 +157,26 @@ class PodcastActivity : DaggerAppCompatActivity() {
             seekBarPodCast.max = duration
             textViewTotalDuration.text =
                 dateUtil.formatPlayerDuration(duration = duration.toLong())
+            initTimer(duration = duration)
         }
+    }
+
+    /* ------------------------------ Timer */
+
+    /**
+     * Initial timer for counting the play time
+     */
+    private fun initTimer(duration: Int) {
+        mTimer?.cancel()
+        mTimer =
+            object : CountDownTimer(duration.toLong(), 100) {
+                override fun onTick(millisUntilFinished: Long) {
+                    setCurrentDuration(duration = mViewModel.getCurrentPodcastDuration())
+                }
+
+                override fun onFinish() {
+                    start()
+                }
+            }.apply { start() }
     }
 }
