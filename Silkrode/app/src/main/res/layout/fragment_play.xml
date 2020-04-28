@@ -34,6 +34,7 @@
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="16dp">
@@ -48,25 +49,52 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_launcher_foreground" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_view_current_duration"
+                style="@style/SilkRodeTextView.Duration"
+                android:layout_marginStart="16dp"
+                android:text="@string/label_default_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_cover" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_view_total_duration"
+                style="@style/SilkRodeTextView.Duration"
+                android:layout_marginEnd="16dp"
+                android:text="@string/label_default_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_cover" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seek_bar_pod_cast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/text_view_total_duration"
+                app:layout_constraintStart_toEndOf="@+id/text_view_current_duration"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_cover" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_view_content_title"
                 style="@style/SilkRodeTextView.ContentTitle"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/image_view_cover"
+                app:layout_constraintTop_toBottomOf="@+id/seek_bar_pod_cast"
                 tools:text="What happens when a Silicon Valley technologist works for the government | Matt Cutts" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_view_content_description"
                 style="@style/SilkRodeTextView.ContentDescription"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_content_title"
                 tools:text="What if the government ran more like Silicon Valley? Engineer Matt Cutts shares why he decided to leave Google (where he worked for nearly 17 years) for a career in the US government -- and makes the case that if you really want to make an impact, go where your help is needed most." />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_view_content_publish_date"
-                style="@style/SilkRodeTextView.DateInformation"
+                style="@style/SilkRodeTextView.Date"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"

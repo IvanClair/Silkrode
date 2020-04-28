@@ -3,6 +3,7 @@ package personal.ivan.silkrode.util
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class DateFormatUtil {
 
@@ -53,4 +54,15 @@ class DateFormatUtil {
             ""
         }
     }
+
+    /**
+     * Format duration to text
+     */
+    fun formatPlayerDuration(duration: Long) =
+        String.format(
+            "%02d:%02d",
+            TimeUnit.MILLISECONDS.toMinutes(duration),
+            TimeUnit.MILLISECONDS.toSeconds(duration) -
+                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+        )
 }

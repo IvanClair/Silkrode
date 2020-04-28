@@ -14,7 +14,7 @@ import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.showApiErrorAlert
-import personal.ivan.silkrode.extension.switchLoadingProcess
+import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
@@ -66,7 +66,7 @@ class PodcastListFragment : DaggerFragment() {
             // API status - loading
             apiLoading.observe(
                 viewLifecycleOwner,
-                Observer { mBinding.progressBarLoading switchLoadingProcess it })
+                Observer { mBinding.progressBarLoading enableOrDisable it })
 
             // API status - fail
             apiFail.observe(

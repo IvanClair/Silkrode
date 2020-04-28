@@ -43,8 +43,9 @@ class PodcastViewModel @Inject constructor(
     val collectionBindingModel = MutableLiveData<CollectionBindingModel>()
 
     // Binding Model - Play
-    val audioControlsEnabled = MutableLiveData<Boolean>().apply { value = true }
+    val audioControlsEnabled = MutableLiveData<Boolean>()
     val playOrPause = MutableLiveData<Boolean>()
+    val totalDuration = MutableLiveData<Int>()
 
     /* ------------------------------ API */
 
@@ -128,6 +129,7 @@ class PodcastViewModel @Inject constructor(
                     prepareCompleteCallback = {
                         audioControlsEnabled.value = true
                         playOrPause.value = true
+                        totalDuration.value = it
                     })
             }
 
@@ -158,9 +160,14 @@ class PodcastViewModel @Inject constructor(
 
     /**
      * Seek progress of the podcast
+     *
+     * @param direct indicate the change is direct to the target or not
      */
-    fun seekPodcast(seconds: Int) {
-        mPodcastService?.seekTo(seconds = seconds)
+    fun seekPodcast(
+        seconds: Int,
+        direct: Boolean
+    ) {
+        mPodcastService?.seekTo(seconds = seconds, direct = direct)
     }
 
     /* ------------------------------ Getter */

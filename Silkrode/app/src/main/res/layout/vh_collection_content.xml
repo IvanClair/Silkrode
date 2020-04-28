@@ -20,7 +20,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_view_content_publish_date"
-            style="@style/SilkRodeTextView.DateInformation"
+            style="@style/SilkRodeTextView.Date"
             android:layout_width="0dp"
             app:layout_constraintEnd_toEndOf="@+id/text_view_content_title"
             app:layout_constraintStart_toStartOf="parent"

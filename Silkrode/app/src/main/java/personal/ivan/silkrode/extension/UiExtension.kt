@@ -9,9 +9,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import personal.ivan.silkrode.R
 
 /**
- * Enable or disable loading [ProgressBar]
+ * Enable or disable a view
  */
-infix fun ProgressBar.switchLoadingProcess(enable: Boolean) {
+infix fun View.enableOrDisable(enable: Boolean) {
     visibility = if (enable) View.VISIBLE else View.GONE
 }
 

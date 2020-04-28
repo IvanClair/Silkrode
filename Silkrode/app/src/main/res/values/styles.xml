@@ -65,7 +65,15 @@
         <item name="android:textColor">@color/textColorSecondary</item>
     </style>
 
-    <style name="SilkRodeTextView.DateInformation" parent="SilkRodeTextView">
+    <style name="SilkRodeTextView.Date" parent="SilkRodeTextView">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption
+        </item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+    </style>
+
+    <style name="SilkRodeTextView.Duration" parent="SilkRodeTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption
         </item>
         <item name="android:textColor">@color/textColorSecondary</item>

@@ -56,7 +56,7 @@ class PodcastAudioService : Service() {
      */
     fun startPlayer(
         url: String,
-        prepareCompleteCallback: () -> Unit
+        prepareCompleteCallback: (Int) -> Unit
     ) {
         mPlayer.apply {
             // stop playing
@@ -69,7 +69,7 @@ class PodcastAudioService : Service() {
             setOnPreparedListener {
                 start()
                 prepared = true
-                prepareCompleteCallback.invoke()
+                prepareCompleteCallback.invoke(mPlayer.duration)
             }
         }
     }
@@ -101,10 +101,13 @@ class PodcastAudioService : Service() {
     /**
      * move to assigned seconds
      */
-    fun seekTo(seconds: Int) {
+    fun seekTo(
+        seconds: Int,
+        direct: Boolean
+    ) {
         if (mPlayer.isPlaying) {
             val duration = mPlayer.duration
-            val adjustedPosition = mPlayer.currentPosition + seconds * 1000
+            val adjustedPosition = if (direct) seconds else mPlayer.currentPosition + seconds * 1000
             val finalPosition = if (adjustedPosition > duration) duration else adjustedPosition
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mPlayer.seekTo(finalPosition.toLong(), SEEK_CLOSEST)

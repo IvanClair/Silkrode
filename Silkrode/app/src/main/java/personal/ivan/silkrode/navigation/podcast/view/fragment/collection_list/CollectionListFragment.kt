@@ -16,7 +16,7 @@ import personal.ivan.silkrode.R
 import personal.ivan.silkrode.databinding.FragmentCollectionListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.showApiErrorAlert
-import personal.ivan.silkrode.extension.switchLoadingProcess
+import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.GlideUtil
@@ -93,7 +93,7 @@ class CollectionListFragment : DaggerFragment() {
             // API status - loading
             apiLoading.observe(
                 viewLifecycleOwner,
-                Observer { mBinding.progressBarLoading switchLoadingProcess it })
+                Observer { mBinding.progressBarLoading enableOrDisable it })
 
             // API status - fail
             apiFail.observe(
