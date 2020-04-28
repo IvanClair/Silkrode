@@ -24,7 +24,7 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
         Prevent double click
      */
     companion object {
-        var lastClickTime = 0L
+        private var lastClickTime = 0L
         fun allowClick(): Boolean {
             val now = System.currentTimeMillis()
             if (now > lastClickTime + 500) {

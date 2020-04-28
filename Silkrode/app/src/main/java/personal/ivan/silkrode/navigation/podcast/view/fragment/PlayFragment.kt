@@ -135,5 +135,5 @@ class PlayFragment : DaggerFragment() {
      * Get selected content data
      */
     private fun getData(): CollectionVhBindingModel.ContentVhBindingModel? =
-        mViewModel.getSelectedContent(mArguments.index)
+        mViewModel.getContent(mArguments.index)
 }

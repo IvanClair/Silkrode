@@ -23,7 +23,7 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
         Prevent double click
      */
     companion object {
-        var lastClickTime = 0L
+        private var lastClickTime = 0L
         fun allowClick(): Boolean {
             val now = System.currentTimeMillis()
             if (now > lastClickTime + 500) {

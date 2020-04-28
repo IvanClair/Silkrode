@@ -1,6 +1,10 @@
 package personal.ivan.silkrode.navigation.podcast.viewmodel
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +42,10 @@ class PodcastViewModel @Inject constructor(
     // Collection binding model
     val collectionBindingModel = MutableLiveData<CollectionBindingModel>()
 
+    // Binding Model - Play
+    val audioControlsEnabled = MutableLiveData<Boolean>().apply { value = true }
+    val playOrPause = MutableLiveData<Boolean>()
+
     /* ------------------------------ API */
 
     /**
@@ -72,58 +80,87 @@ class PodcastViewModel @Inject constructor(
 
     /* ------------------------------ Service */
 
+    // Podcast Service
+    private var mPodcastService: PodcastAudioService? = null
+
+    /**
+     * Start podcast service
+     */
+    fun startPodcastService() {
+        val context = getApplication<SilkrodeApplication>()
+        val intent = Intent(context, PodcastAudioService::class.java)
+        context.bindService(
+            intent,
+            object : ServiceConnection {
+                override fun onServiceDisconnected(p0: ComponentName?) {
+                    mPodcastService = null
+                }
+
+                override fun onServiceConnected(
+                    p0: ComponentName?,
+                    p1: IBinder?
+                ) {
+                    mPodcastService =
+                        (p1 as? PodcastAudioService.PodcastServiceBinder)?.getPodCastService()
+                }
+            },
+            Context.BIND_AUTO_CREATE
+        )
+    }
+
     /**
      * Start the podcast
+     *
+     * @param forceUpdate indicate that need to restart a new play or not
      */
-    fun startPodcast() {
-        val url =
-            "https://dts.podtrac.com/redirect.mp3/download.ted.com/talks/MattCutts_2019U.mp3?apikey=172BB350-0207&prx_url=https://dovetail.prxu.org/70/1b56e1b3-9eaa-4918-a9a3-f69650636d5c/MattCutts_2019U_VO_Intro.mp3"
-        startPodcastService(
-            intent =
-            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_START)
-                .apply { putExtra(PodcastAudioService.PODCAST_BUNDLE_TAG_URL, url) }
-        )
+    fun playPodcast(
+        url: String,
+        forceUpdate: Boolean
+    ) {
+        when {
+            // force to restart a new play
+            forceUpdate -> {
+                audioControlsEnabled.value = false
+                val aurl =
+                    "https://dts.podtrac.com/redirect.mp3/download.ted.com/talks/MattCutts_2019U.mp3?apikey=172BB350-0207&prx_url=https://dovetail.prxu.org/70/1b56e1b3-9eaa-4918-a9a3-f69650636d5c/MattCutts_2019U_VO_Intro.mp3"
+                mPodcastService?.startPlayer(
+                    url = aurl,
+                    prepareCompleteCallback = {
+                        audioControlsEnabled.value = true
+                        playOrPause.value = true
+                    })
+            }
+
+            // is playing, pause the podcast
+            mPodcastService?.isPlaying() == true -> pausePodcast()
+
+            // is not playing but prepared, it means is paused, try to resume the podcast
+            mPodcastService?.isPlaying() == false
+                    && mPodcastService?.isPlayerPrepared() == true -> resumePodcast()
+        }
     }
 
     /**
      * Pause the podcast
      */
-    fun pausePodcast() {
-        startPodcastService(
-            intent =
-            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_PAUSE)
-        )
+    private fun pausePodcast() {
+        mPodcastService?.pausePlayer()
+        playOrPause.value = false
     }
 
     /**
      * Resume the podcast
      */
-    fun resumePodcast() {
-        startPodcastService(
-            intent =
-            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_RESUME)
-        )
+    private fun resumePodcast() {
+        mPodcastService?.resumePlayer()
+        playOrPause.value = true
     }
 
     /**
      * Seek progress of the podcast
      */
-    fun seekPodcast(second: Int) {
-        startPodcastService(
-            intent =
-            getPodcastServiceIntent(actionName = PodcastAudioService.PODCAST_ACTION_SEEK_TO)
-                .apply { putExtra(PodcastAudioService.PODCAST_BUNDLE_TAG_SEEK_TO, second) }
-        )
-    }
-
-    private fun getPodcastServiceIntent(@PodcastAudioService.Companion.PodcastServiceAction actionName: String): Intent =
-        Intent(
-            getApplication<SilkrodeApplication>(),
-            PodcastAudioService::class.java
-        ).apply { action = actionName }
-
-    private fun startPodcastService(intent: Intent) {
-        getApplication<SilkrodeApplication>().startService(intent)
+    fun seekPodcast(seconds: Int) {
+        mPodcastService?.seekTo(seconds = seconds)
     }
 
     /* ------------------------------ Getter */
@@ -148,6 +185,6 @@ class PodcastViewModel @Inject constructor(
     /**
      * Get selected content
      */
-    fun getSelectedContent(index: Int): CollectionVhBindingModel.ContentVhBindingModel? =
+    fun getContent(index: Int): CollectionVhBindingModel.ContentVhBindingModel? =
         getCollectionList()?.getOrNull(index) as? CollectionVhBindingModel.ContentVhBindingModel
 }

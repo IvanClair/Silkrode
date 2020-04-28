@@ -2,7 +2,9 @@ package personal.ivan.silkrode.extension
 
 import android.content.Context
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import personal.ivan.silkrode.R
 
@@ -22,4 +24,16 @@ fun Context.showApiErrorAlert() {
         .setMessage(R.string.alert_message)
         .setPositiveButton(R.string.label_ok, null)
         .show()
+}
+
+/**
+ * Change tint color for audio controls
+ */
+infix fun ImageView.setTintForPlayerStatus(enabled: Boolean) {
+    setColorFilter(
+        ContextCompat.getColor(
+            context,
+            if (enabled) R.color.colorPrimaryDark else android.R.color.darker_gray
+        )
+    )
 }

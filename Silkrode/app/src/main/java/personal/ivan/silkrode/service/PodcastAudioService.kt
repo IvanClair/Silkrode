@@ -5,116 +5,123 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.MediaPlayer.SEEK_CLOSEST
+import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import androidx.annotation.StringDef
 
 class PodcastAudioService : Service() {
 
-    // Constant
-    companion object {
-        // Action
-        @StringDef(
-            PODCAST_ACTION_START,
-            PODCAST_ACTION_PAUSE,
-            PODCAST_ACTION_RESUME,
-            PODCAST_ACTION_SEEK_TO
-        )
-        @Retention(AnnotationRetention.SOURCE)
-        annotation class PodcastServiceAction
-
-        const val PODCAST_ACTION_START = "PODCAST_ACTION_START"
-        const val PODCAST_ACTION_PAUSE = "PODCAST_ACTION_PAUSE"
-        const val PODCAST_ACTION_RESUME = "PODCAST_ACTION_RESUME"
-        const val PODCAST_ACTION_SEEK_TO = "PODCAST_ACTION_SEEK_TO"
-
-        // Bundle Tag
-        @StringDef(
-            PODCAST_BUNDLE_TAG_URL,
-            PODCAST_BUNDLE_TAG_SEEK_TO
-        )
-        @Retention(AnnotationRetention.SOURCE)
-        annotation class PodcastServiceBundleTag
-
-        const val PODCAST_BUNDLE_TAG_URL = "PODCAST_BUNDLE_TAG_URL"
-        const val PODCAST_BUNDLE_TAG_SEEK_TO = "PODCAST_BUNDLE_TAG_SEEK_TO"
-    }
-
     // Media Player
-    private val mPlayer: MediaPlayer =
-        MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes
-                    .Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build()
-            )
-        }
+    private lateinit var mPlayer: MediaPlayer
+
+    // Local Binder
+    private val mBinder = PodcastServiceBinder()
+
+    // Flag
+    private var prepared: Boolean = false
+
+    /* ------------------------------ Binder */
+
+    inner class PodcastServiceBinder : Binder() {
+        fun getPodCastService() = this@PodcastAudioService
+    }
 
     /* ------------------------------ Override */
 
-    override fun onBind(p0: Intent?): IBinder? {
-        TODO("Not yet implemented")
+    override fun onBind(p0: Intent?): IBinder? = mBinder
+
+    override fun onCreate() {
+        super.onCreate()
+        mPlayer =
+            MediaPlayer().apply {
+                setAudioAttributes(
+                    AudioAttributes
+                        .Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build()
+                )
+            }
     }
 
-    override fun onStartCommand(
-        intent: Intent?,
-        flags: Int,
-        startId: Int
-    ): Int {
-        when (intent?.action) {
-            // start player
-            PODCAST_ACTION_START ->
-                intent.extras
-                    ?.getString(PODCAST_BUNDLE_TAG_URL)
-                    ?.also { startPlayer(it) }
+    override fun onDestroy() {
+        super.onDestroy()
+        stopPlayer()
+        mPlayer.release()
+    }
 
-            // pause player
-            PODCAST_ACTION_PAUSE -> pausePlayer()
+    /* ------------------------------ Public Function */
 
-            // resume player
-            PODCAST_ACTION_RESUME -> resumePlayer()
+    /**
+     * Start to play from url
+     */
+    fun startPlayer(
+        url: String,
+        prepareCompleteCallback: () -> Unit
+    ) {
+        mPlayer.apply {
+            // stop playing
+            stopPlayer()
 
-            // seek to
-            PODCAST_ACTION_SEEK_TO -> {
-                intent.extras
-                    ?.getInt(PODCAST_BUNDLE_TAG_SEEK_TO)
-                    ?.also { seekTo(second = it) }
+            // start to play
+            setDataSource(url)
+            prepared = false
+            prepareAsync()
+            setOnPreparedListener {
+                start()
+                prepared = true
+                prepareCompleteCallback.invoke()
             }
         }
-        return START_STICKY
+    }
+
+    /**
+     * Check the play is prepared or not
+     */
+    fun isPlayerPrepared() = prepared
+
+    /**
+     * Check the player is playing or not
+     */
+    fun isPlaying() = mPlayer.isPlaying
+
+    /**
+     * Pause the player
+     */
+    fun pausePlayer() {
+        mPlayer.pause()
+    }
+
+    /**
+     * resume the player
+     */
+    fun resumePlayer() {
+        mPlayer.start()
+    }
+
+    /**
+     * move to assigned seconds
+     */
+    fun seekTo(seconds: Int) {
+        if (mPlayer.isPlaying) {
+            val duration = mPlayer.duration
+            val adjustedPosition = mPlayer.currentPosition + seconds * 1000
+            val finalPosition = if (adjustedPosition > duration) duration else adjustedPosition
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mPlayer.seekTo(finalPosition.toLong(), SEEK_CLOSEST)
+            } else {
+                mPlayer.seekTo(finalPosition)
+            }
+        }
     }
 
     /* ------------------------------ Private Function */
 
-    private fun startPlayer(url: String) {
+    private fun stopPlayer() {
         mPlayer.apply {
-            // stop playing
             if (isPlaying) {
                 stop()
+                reset()
             }
-
-            // start to play
-            setDataSource(url)
-            prepareAsync()
-            setOnPreparedListener { start() }
-        }
-    }
-
-    private fun pausePlayer() {
-        mPlayer.pause()
-    }
-
-    private fun resumePlayer() {
-        mPlayer.start()
-    }
-
-    private fun seekTo(second: Int) {
-        val position = mPlayer.currentPosition + second * 1000
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mPlayer.seekTo(position.toLong(), SEEK_CLOSEST)
-        } else {
-            mPlayer.seekTo(position)
         }
     }
 }

@@ -86,4 +86,21 @@
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
     </style>
+
+    <!--  Audio Control ImageView  -->
+    <style name="SilkRodeAudioControlImageView">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tint">@color/colorPrimaryDark</item>
+    </style>
+
+    <!--  ProgressBar on AppBarLayout  -->
+    <style name="SilkRodeProgressBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_gravity">end|center_vertical</item>
+    </style>
 </resources>

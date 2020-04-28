@@ -17,9 +17,12 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/abc_vector_test"
-            tools:ignore="PrivateResource" />
+            android:layout_height="?attr/actionBarSize">
+
+            <ProgressBar
+                android:id="@+id/progress_bar_loading"
+                style="@style/SilkRodeProgressBar" />
+        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
@@ -75,37 +78,27 @@
 
     <ImageView
         android:id="@+id/image_view_pause_or_play"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
+        style="@style/SilkRodeAudioControlImageView"
         android:contentDescription="@null"
-        android:src="@drawable/pause_circle_filled_24px"
-        android:tint="@color/colorPrimaryDark"
+        android:src="@drawable/play_arrow_24px"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/image_view_replay"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="16dp"
+        style="@style/SilkRodeAudioControlImageView"
         android:contentDescription="@null"
         android:src="@drawable/replay_30_24px"
-        android:tint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/image_view_pause_or_play"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/image_view_forward"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        style="@style/SilkRodeAudioControlImageView"
         android:contentDescription="@null"
         android:src="@drawable/forward_30_24px"
-        android:tint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image_view_pause_or_play" />
