@@ -45,7 +45,11 @@ class PlayFragment : DaggerFragment() {
     private val mArguments by navArgs<PlayFragmentArgs>()
 
     // Flag
+    // indicate the url should force update current playing content or not
     private var mForceUpdate = true
+    // indicate should this page keep update progress from view model or not
+    // if not, it means the current playing content is not this one
+    private var mPlayingContent = false
     private var mDragging = false
 
     // Timer
@@ -72,11 +76,16 @@ class PlayFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
+        // initial flags
+        initFlags()
+
+        // initial UI
         mBinding.progressBarLoading enableOrDisable false
         setNavBackIcon()
         setUpInformation()
         initSeekBar()
         initAudioControls()
+        switchForwardAndReplay(enabled = false)
         observeLiveData()
     }
 
@@ -95,21 +104,33 @@ class PlayFragment : DaggerFragment() {
             audioControlsEnabled.observe(
                 viewLifecycleOwner,
                 Observer {
-                    mBinding.progressBarLoading enableOrDisable !it
-                    switchProgressVisibility(enabled = it)
-                    setAudioControlTint(enabled = it)
+                    // only update if it is target content
+                    if (mPlayingContent) {
+                        mBinding.progressBarLoading enableOrDisable !it
+                        switchProgressVisibility(enabled = it)
+                        switchAudioControls(enabled = it)
+                    }
                 })
 
             // is playing or paused
             playOrPause.observe(
                 viewLifecycleOwner,
-                Observer { changePlayOrPauseImage(playing = it) }
+                Observer {
+                    // only update if it is target content
+                    if (mPlayingContent) {
+                        changePlayOrPauseImage(playing = it)
+                    }
+                }
             )
 
             // total duration of the podcast
             totalDuration.observe(
                 viewLifecycleOwner,
-                Observer { setTotalDuration(duration = it) })
+                Observer {
+                    if (mPlayingContent) {
+                        setTotalDuration(duration = it)
+                    }
+                })
         }
     }
 
@@ -145,7 +166,19 @@ class PlayFragment : DaggerFragment() {
     private fun initAudioControls() {
         mBinding.apply {
             imageViewPauseOrPlay.setOnClickListener {
-                mViewModel.playPodcast(url = "", forceUpdate = mForceUpdate)
+                // reset playing content flag if this time is using force update
+                if (mForceUpdate) {
+                    mPlayingContent = true
+                }
+
+                mViewModel.playPodcast(
+                    url = getData()?.contentUrl ?: "",
+                    forceUpdate = mForceUpdate
+                )
+
+                // did force update,
+                // change the flag to false,
+                // next time would not force update
                 mForceUpdate = false
             }
 
@@ -159,11 +192,20 @@ class PlayFragment : DaggerFragment() {
         }
     }
 
-    private fun setAudioControlTint(enabled: Boolean) {
+    private fun switchAudioControls(enabled: Boolean) {
         mBinding.apply {
             imageViewPauseOrPlay setTintForPlayerStatus enabled
+            imageViewPauseOrPlay.isEnabled = enabled
+            switchForwardAndReplay(enabled = enabled)
+        }
+    }
+
+    private fun switchForwardAndReplay(enabled: Boolean) {
+        mBinding.apply {
             imageViewForward setTintForPlayerStatus enabled
+            imageViewForward.isEnabled = enabled
             imageViewReplay setTintForPlayerStatus enabled
+            imageViewReplay.isEnabled = enabled
         }
     }
 
@@ -236,6 +278,7 @@ class PlayFragment : DaggerFragment() {
 
     /**
      * Initial timer for counting the play time
+     * Note : this is an infinite timer
      */
     private fun initTimer(duration: Int) {
         mTimer?.cancel()
@@ -252,6 +295,16 @@ class PlayFragment : DaggerFragment() {
     }
 
     /* ------------------------------ Get Data */
+
+    /**
+     * Initial flags for logic
+     */
+    private fun initFlags() {
+        val playingUrl = mViewModel.getCurrentPlayingUrl()
+        val currentUrl = getData()?.contentUrl ?: ""
+        mForceUpdate = playingUrl != currentUrl
+        mPlayingContent = playingUrl.isEmpty() || playingUrl == currentUrl
+    }
 
     /**
      * Get selected content data

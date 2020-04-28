@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import personal.ivan.silkrode.SilkrodeApplication
@@ -39,7 +40,8 @@ class PodcastViewModel @Inject constructor(
             apiLoading.value = false
         }
 
-    // Collection binding model
+    // Collection Binding Model
+    private lateinit var mCollectionApiJob: Job
     val collectionBindingModel = MutableLiveData<CollectionBindingModel>()
 
     // Binding Model - Play
@@ -55,13 +57,13 @@ class PodcastViewModel @Inject constructor(
     // todo boilerplate code can be improved, also maybe this API should use [Podcast.id] to request?
     fun requestCollectionApi(id: String) {
         Log.d(PodcastViewModel::class.simpleName, id)
-        viewModelScope.launch {
-            apiLoading.value = true
-            val result = mRepository.getCastDetail()
-            if (result == null) apiFail.value = true
-            else createCollectionBindingModel(data = result)
-            apiLoading.value = false
-        }
+        mCollectionApiJob =
+            viewModelScope.launch {
+                apiLoading.value = true
+                val result = mRepository.getCastDetail()
+                if (result != null) createCollectionBindingModel(data = result)
+                apiLoading.value = false
+            }
     }
 
     /**
@@ -122,10 +124,8 @@ class PodcastViewModel @Inject constructor(
             // force to restart a new play
             forceUpdate -> {
                 audioControlsEnabled.value = false
-                val aurl =
-                    "https://dts.podtrac.com/redirect.mp3/download.ted.com/talks/MattCutts_2019U.mp3?apikey=172BB350-0207&prx_url=https://dovetail.prxu.org/70/1b56e1b3-9eaa-4918-a9a3-f69650636d5c/MattCutts_2019U_VO_Intro.mp3"
                 mPodcastService?.startPlayer(
-                    url = aurl,
+                    url = url,
                     prepareCompleteCallback = {
                         audioControlsEnabled.value = true
                         playOrPause.value = true
@@ -175,6 +175,11 @@ class PodcastViewModel @Inject constructor(
      */
     fun getCurrentPodcastDuration() = mPodcastService?.getCurrentDuration() ?: 0
 
+    /**
+     * Get current playing url
+     */
+    fun getCurrentPlayingUrl() = mPodcastService?.getPlayingUrl() ?: ""
+
     /* ------------------------------ Getter */
 
     /**
@@ -193,6 +198,14 @@ class PodcastViewModel @Inject constructor(
      */
     fun getSelectedCoverImageUrl(): String =
         collectionBindingModel.value?.coverImageUrl ?: ""
+
+    /**
+     * Clear collection binding model
+     */
+    fun clearCollectionBindingModel() {
+        mCollectionApiJob.cancel()
+        collectionBindingModel.value = null
+    }
 
     /**
      * Get selected content

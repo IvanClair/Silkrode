@@ -15,8 +15,8 @@ import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.databinding.FragmentCollectionListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
-import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.extension.enableOrDisable
+import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.GlideUtil
@@ -28,10 +28,6 @@ class CollectionListFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
-
-    // Adapter
-    @Inject
-    lateinit var collectionListAdapter: CollectionListAdapter
 
     // Glide
     @Inject
@@ -80,7 +76,6 @@ class CollectionListFragment : DaggerFragment() {
         // set up shared element for transition
         mBinding.imageViewCover.transitionName = mArguments.id
         setNavBackIcon()
-        setToolbarTitle()
         initRecyclerView()
         observeLiveData()
     }
@@ -104,8 +99,12 @@ class CollectionListFragment : DaggerFragment() {
             collectionBindingModel.observe(
                 viewLifecycleOwner,
                 Observer {
-                    loadCoverImage(url = it.coverImageUrl)
-                    updateRecyclerView()
+                    if (it != null) {
+                        mApiDataLoaded = true
+                        loadCoverImage(url = it.coverImageUrl)
+                        setToolbarTitle()
+                        updateRecyclerView()
+                    }
                 })
         }
     }
@@ -118,7 +117,10 @@ class CollectionListFragment : DaggerFragment() {
     private fun setNavBackIcon() {
         mBinding.toolbar.apply {
             navigationIcon?.setTint(ContextCompat.getColor(context, R.color.navIconColor))
-            setNavigationOnClickListener { findNavController().navigateUp() }
+            setNavigationOnClickListener {
+                mViewModel.clearCollectionBindingModel()
+                findNavController().navigateUp()
+            }
         }
     }
 
@@ -151,20 +153,13 @@ class CollectionListFragment : DaggerFragment() {
     }
 
     /**
-     * Check Toolbar title when got API response
-     */
-    private fun checkToolbarTitleWhenGotApiResponse() {
-        if (mExpanded) mBinding.collapsingToolbarLayout.title = " "
-    }
-
-    /**
      * Loading cover image
      */
     private fun loadCoverImage(url: String) {
         glideUtil.loadPodcastCover(
             imageView = mBinding.imageViewCover,
-            url = url,
-            completeListener = { checkToolbarTitleWhenGotApiResponse() })
+            url = url
+        )
     }
 
     /**
@@ -174,12 +169,14 @@ class CollectionListFragment : DaggerFragment() {
         mBinding.recyclerViewCollection.apply {
 
             // set up adapter
-            adapter = collectionListAdapter
-            collectionListAdapter.setOnItemClickListener(View.OnClickListener {
-                if (CollectionListAdapter.allowClick()) {
-                    navigateToPlay(index = it.tag as Int)
+            adapter =
+                CollectionListAdapter().apply {
+                    setOnItemClickListener(View.OnClickListener {
+                        if (CollectionListAdapter.allowClick()) {
+                            navigateToPlay(index = it.tag as Int)
+                        }
+                    })
                 }
-            })
 
             // return transition
             postponeEnterTransition()

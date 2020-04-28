@@ -21,7 +21,10 @@ class PodcastAudioService : Service() {
     private val mBinder = PodcastServiceBinder()
 
     // Flag
-    private var prepared: Boolean = false
+    private var mPrepared: Boolean = false
+
+    // Url
+    private var mPlayingUrl: String = ""
 
     /* ------------------------------ Binder */
 
@@ -67,20 +70,24 @@ class PodcastAudioService : Service() {
 
             // start to play
             setDataSource(url)
-            prepared = false
+            mPrepared = false
             prepareAsync()
             setOnPreparedListener {
                 start()
-                prepared = true
+                mPrepared = true
+                mPlayingUrl = url
                 prepareCompleteCallback.invoke(mPlayer.duration)
             }
+
+            // clear playing url
+            setOnCompletionListener { mPlayingUrl = "" }
         }
     }
 
     /**
      * Check the play is prepared or not
      */
-    fun isPlayerPrepared() = prepared
+    fun isPlayerPrepared() = mPrepared
 
     /**
      * Check the player is playing or not
@@ -108,28 +115,37 @@ class PodcastAudioService : Service() {
 
     /**
      * move to assigned seconds
+     *
+     * @param direct indicate that this process is seek to the position directly or not
      */
     fun seekTo(
         seconds: Int,
         direct: Boolean
     ) {
         GlobalScope.launch(Dispatchers.IO) {
-            if (mPlayer.isPlaying) {
-                val duration = mPlayer.duration
-                val adjustedPosition =
-                    if (direct) seconds
-                    else mPlayer.currentPosition + seconds * 1000
-                val finalPosition =
-                    if (adjustedPosition > duration) duration
-                    else adjustedPosition
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    mPlayer.seekTo(finalPosition.toLong(), SEEK_CLOSEST)
-                } else {
-                    mPlayer.seekTo(finalPosition)
-                }
+            // total duration of the podcast
+            val duration = mPlayer.duration
+            // adjusted position of the podcast
+            val adjustedPosition =
+                if (direct) seconds
+                else mPlayer.currentPosition + seconds * 1000
+            // final position depends on the params above
+            val finalPosition =
+                if (adjustedPosition > duration) duration
+                else adjustedPosition
+            // seek to position
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mPlayer.seekTo(finalPosition.toLong(), SEEK_CLOSEST)
+            } else {
+                mPlayer.seekTo(finalPosition)
             }
         }
     }
+
+    /**
+     * Get current playing url
+     */
+    fun getPlayingUrl() = mPlayingUrl
 
     /* ------------------------------ Private Function */
 
