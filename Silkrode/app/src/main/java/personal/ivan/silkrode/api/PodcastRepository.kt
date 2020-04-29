@@ -6,17 +6,21 @@ import javax.inject.Inject
     TODO Retrofit throws exception if network is unavailable,
      maybe they will update in future, keep an eye on new release
  */
-class PodcastRepository @Inject constructor(private val mService: PodcastService) {
+class PodcastRepository @Inject constructor(private val mService: PodcastApiService) {
 
     /**
      * Get podcast list
      */
-    suspend fun getPodcastList(): List<Podcast>? =
-        try {
-            mService.getPodcastList().data?.podcastList
-        } catch (e: Exception) {
-            null
-        }
+    fun fetchPodcastList() =
+        object : ApiUtil<PodcastApiResponse<PodcastData>, List<Podcast>>() {
+
+            override suspend fun getApiResponse(): PodcastApiResponse<PodcastData> =
+                mService.getPodcastList()
+
+            override suspend fun convertResponse(apiRs: PodcastApiResponse<PodcastData>): List<Podcast>? =
+                apiRs.data?.podcastList
+
+        }.getLiveData()
 
     /**
      * Get collection of a certain artist

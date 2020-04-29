@@ -7,12 +7,11 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import personal.ivan.silkrode.api.PodcastRepository
-import personal.ivan.silkrode.api.PodcastService
+import personal.ivan.silkrode.api.PodcastApiService
 import personal.ivan.silkrode.di.ViewModelKey
 import personal.ivan.silkrode.navigation.podcast.view.PodcastActivity
 import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
-import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListAdapter
 import personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListAdapter
 import personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
@@ -81,13 +80,13 @@ object PodcastRepositoryModule {
     @JvmStatic
     @PodcastScope
     @Provides
-    fun providePodCastRepository(service: PodcastService) = PodcastRepository(mService = service)
+    fun providePodCastRepository(service: PodcastApiService) = PodcastRepository(mService = service)
 
     @JvmStatic
     @PodcastScope
     @Provides
-    fun providePodCastService(retrofit: Retrofit): PodcastService =
-        retrofit.create(PodcastService::class.java)
+    fun providePodCastService(retrofit: Retrofit): PodcastApiService =
+        retrofit.create(PodcastApiService::class.java)
 }
 
 /* ------------------------------ PodCast Scope Module */

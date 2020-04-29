@@ -6,12 +6,16 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import personal.ivan.silkrode.SilkrodeApplication
+import personal.ivan.silkrode.api.ApiStatus
 import personal.ivan.silkrode.api.Collection
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.api.PodcastRepository
@@ -32,13 +36,7 @@ class PodcastViewModel @Inject constructor(
     val apiFail = MutableLiveData<Boolean>()
 
     // API response - podcast list
-    val podcastList: LiveData<List<Podcast>> =
-        liveData {
-            apiLoading.value = true
-            val result = mRepository.getPodcastList()?.also { emit(it) }
-            if (result == null) apiFail.value = true
-            apiLoading.value = false
-        }
+    val podcastList: LiveData<ApiStatus<List<Podcast>>> = mRepository.fetchPodcastList()
 
     // Collection Binding Model
     private lateinit var mCollectionApiJob: Job
@@ -185,7 +183,7 @@ class PodcastViewModel @Inject constructor(
     /**
      * Get podcast list
      */
-    fun getPodcastList(): List<Podcast>? = podcastList.value
+    fun getPodcastList(): List<Podcast>? = podcastList.value?.data
 
     /**
      * Get collection view holder list
