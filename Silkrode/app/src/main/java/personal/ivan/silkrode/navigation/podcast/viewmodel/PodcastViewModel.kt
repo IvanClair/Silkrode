@@ -201,6 +201,8 @@ class PodcastViewModel @Inject constructor(
 
     /**
      * Clear collection binding model
+     *
+     * make sure every time user can get the correct data
      */
     fun clearCollectionBindingModel() {
         mCollectionApiJob.cancel()

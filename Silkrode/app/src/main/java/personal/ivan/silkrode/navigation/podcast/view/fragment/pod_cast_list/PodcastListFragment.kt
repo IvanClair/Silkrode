@@ -98,9 +98,6 @@ class PodcastListFragment : DaggerFragment() {
                     imageView: ImageView,
                     id: String
                 ) {
-                    // request collection API
-                    mViewModel.requestCollectionApi(id = id)
-                    // navigate to next page
                     navigateToCollectionList(imageView = imageView, id = id)
                 }
             })

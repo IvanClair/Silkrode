@@ -78,6 +78,8 @@ class CollectionListFragment : DaggerFragment() {
         setNavBackIcon()
         initRecyclerView()
         observeLiveData()
+        // request collection API
+        mViewModel.requestCollectionApi(id = mArguments.id)
     }
 
     /* ------------------------------ Observe LiveData */
@@ -98,10 +100,11 @@ class CollectionListFragment : DaggerFragment() {
             // collection from API response
             collectionBindingModel.observe(
                 viewLifecycleOwner,
-                Observer {
-                    if (it != null) {
+                Observer { model ->
+                    // check null since API may be canceled
+                    model?.apply {
                         mApiDataLoaded = true
-                        loadCoverImage(url = it.coverImageUrl)
+                        loadCoverImage(url = coverImageUrl)
                         setToolbarTitle()
                         updateRecyclerView()
                     }
