@@ -25,7 +25,8 @@ class PodcastViewModel @Inject constructor(
 
     // API response - Collection Binding Model
     private val mSelectedPodcastId = MutableLiveData<String>()
-    val collectionBindingModel = mSelectedPodcastId.switchMap { mRepository.getCollectionn() }
+    val collectionBindingModel = mSelectedPodcastId.switchMap { mRepository.getCollection() }
+    val expandCollapsingToolBarLayout = MutableLiveData<Boolean>()
 
     // Binding Model - Play
     val audioControlsEnabled = MutableLiveData<Boolean>()
@@ -39,6 +40,16 @@ class PodcastViewModel @Inject constructor(
      */
     fun requestCollectionApi(id: String) {
         mSelectedPodcastId.value = id
+    }
+
+    /* ------------------------------ UI Config - Collection */
+
+    /**
+     * Since CollapsingToolBarLayout does not implement save
+     * view state internally in fragment, need to control it
+     */
+    fun setCoverImageExpand(expand: Boolean) {
+        expandCollapsingToolBarLayout.value = expand
     }
 
     /* ------------------------------ Service */
@@ -148,9 +159,14 @@ class PodcastViewModel @Inject constructor(
     fun getPodcastList(): List<Podcast>? = podcastList.value?.data
 
     /**
+     * Get collection by id
+     */
+    fun didCollection(id: String): Boolean = id == mSelectedPodcastId.value
+
+    /**
      * Get collection view holder list
      */
-    fun getCoententFeedList(): List<CollectionVhBindingModel>? =
+    fun getContentFeedList(): List<CollectionVhBindingModel>? =
         collectionBindingModel.value?.data?.vhModelList
 
     /**
@@ -163,5 +179,5 @@ class PodcastViewModel @Inject constructor(
      * Get selected content
      */
     fun getContentFeed(index: Int): CollectionVhBindingModel.ContentVhBindingModel? =
-        getCoententFeedList()?.getOrNull(index) as? CollectionVhBindingModel.ContentVhBindingModel
+        getContentFeedList()?.getOrNull(index) as? CollectionVhBindingModel.ContentVhBindingModel
 }

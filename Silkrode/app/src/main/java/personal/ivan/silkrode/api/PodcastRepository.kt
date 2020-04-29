@@ -22,7 +22,10 @@ class PodcastRepository @Inject constructor(
 
         }.getLiveData()
 
-    fun getCollectionn() =
+    /**
+     * Get collection of a certain artist
+     */
+    fun getCollection() =
         object : ApiUtil<PodcastApiResponse<CollectionData>, CollectionBindingModel>() {
             override suspend fun getApiResponse(): PodcastApiResponse<CollectionData> =
                 mService.getCollection()
@@ -36,14 +39,4 @@ class PodcastRepository @Inject constructor(
                 }
 
         }.getLiveData()
-
-    /**
-     * Get collection of a certain artist
-     */
-    suspend fun getCollection(): Collection? =
-        try {
-            mService.getCollection().data?.collection
-        } catch (e: Exception) {
-            null
-        }
 }

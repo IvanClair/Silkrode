@@ -94,7 +94,7 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
      */
     fun updateDataSource(viewModel: PodcastViewModel) {
         viewModel
-            .getCoententFeedList()
+            .getContentFeedList()
             ?.also {
                 mDataList.apply {
                     clear()

@@ -21,6 +21,7 @@ import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.GlideUtil
 import javax.inject.Inject
+import kotlin.math.abs
 
 class CollectionListFragment : DaggerFragment() {
 
@@ -78,8 +79,11 @@ class CollectionListFragment : DaggerFragment() {
         setNavBackIcon()
         initRecyclerView()
         observeLiveData()
-        // request collection API
-        mViewModel.requestCollectionApi(id = mArguments.id)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mViewModel.setCoverImageExpand(expand = mExpanded)
     }
 
     /* ------------------------------ Observe LiveData */
@@ -87,19 +91,33 @@ class CollectionListFragment : DaggerFragment() {
     private fun observeLiveData() {
         mViewModel.apply {
 
+            // request API if needed
+            if (!didCollection(id = mArguments.id)) {
+                requestCollectionApi(id = mArguments.id)
+            }
+
+            // app bar layout expand or collapse
+            expandCollapsingToolBarLayout.observe(
+                viewLifecycleOwner,
+                Observer { switchAppBarLayoutExpandStatus(expand = it) })
+
             // collection from API response
             collectionBindingModel.observe(
                 viewLifecycleOwner,
                 Observer {
                     switchLoadingStatus(enable = it.status == ApiStatus.LOADING)
                     if (it.status == ApiStatus.SUCCESS) {
-                        mApiDataLoaded = true
-                        loadCoverImage(url = mViewModel.getSelectedCollectionCoverImageUrl())
-                        setToolbarTitle()
-                        updateRecyclerView()
+                        updateFromData()
                     }
                 })
         }
+    }
+
+    private fun updateFromData() {
+        mApiDataLoaded = true
+        loadCoverImage(url = mViewModel.getSelectedCollectionCoverImageUrl())
+        setToolbarTitle()
+        updateRecyclerView()
     }
 
     /* ------------------------------ UI */
@@ -122,29 +140,27 @@ class CollectionListFragment : DaggerFragment() {
     }
 
     /**
+     * Expand or collapse app bar layout at first time
+     */
+    private fun switchAppBarLayoutExpandStatus(expand: Boolean) {
+        mBinding.appBarLayout.setExpanded(expand, true)
+    }
+
+    /**
      * Set Toolbar title on expand only
      */
     private fun setToolbarTitle() {
-        var scrollRange = -1
         val title = getString(R.string.title_all_episodes)
-        mBinding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { barLayout, verticalOffset ->
-            if (scrollRange == -1) {
-                scrollRange = barLayout?.totalScrollRange ?: -1
-            }
+        mBinding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            if (abs(verticalOffset) - appBarLayout.totalScrollRange == 0) {
+                //  Collapsed
+                mBinding.collapsingToolbarLayout.title = title
+                mExpanded = false
 
-            when {
-                // expand
-                scrollRange + verticalOffset == 0 -> {
-                    mBinding.collapsingToolbarLayout.title = title
-                    mExpanded = true
-                }
-
-                // collapse
-                mExpanded -> {
-                    //careful there should a space between double quote otherwise it wont work
-                    mBinding.collapsingToolbarLayout.title = if (mApiDataLoaded) " " else title
-                    mExpanded = false
-                }
+            } else {
+                //Expanded
+                mBinding.collapsingToolbarLayout.title = if (mApiDataLoaded) " " else title
+                mExpanded = true
             }
         })
     }
@@ -198,6 +214,14 @@ class CollectionListFragment : DaggerFragment() {
      * Navigate to [PlayFragment]
      */
     private fun navigateToPlay(index: Int) {
-        findNavController().navigate(CollectionListFragmentDirections.navigateToPlay(index = index))
+        mViewModel
+            .getContentFeed(index = index)
+            ?.also {
+                findNavController().navigate(
+                    CollectionListFragmentDirections.navigateToPlay(
+                        contentFeed = it
+                    )
+                )
+            }
     }
 }

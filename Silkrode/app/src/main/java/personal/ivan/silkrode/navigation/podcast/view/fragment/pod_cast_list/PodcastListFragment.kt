@@ -136,5 +136,6 @@ class PodcastListFragment : DaggerFragment() {
             PodcastListFragmentDirections.navigateToCollectionList(id = id),
             FragmentNavigatorExtras(imageView to id)
         )
+        mViewModel.setCoverImageExpand(expand = true)
     }
 }

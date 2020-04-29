@@ -17,7 +17,6 @@ import personal.ivan.silkrode.databinding.FragmentPlayBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.extension.setTintForPlayerStatus
-import personal.ivan.silkrode.navigation.podcast.model.CollectionVhBindingModel
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.DateFormatUtil
 import personal.ivan.silkrode.util.GlideUtil
@@ -47,6 +46,7 @@ class PlayFragment : DaggerFragment() {
     // Flag
     // indicate the url should force update current playing content or not
     private var mForceUpdate = true
+
     // indicate should this page keep update progress from view model or not
     // if not, it means the current playing content is not this one
     private var mPlayingContent = false
@@ -150,15 +150,15 @@ class PlayFragment : DaggerFragment() {
      * Set up title and description
      */
     private fun setUpInformation() {
-        getData()?.also {
+        with(mArguments.contentFeed) {
             mBinding.apply {
                 glideUtil.loadPodcastCover(
                     imageView = imageViewCover,
                     url = mViewModel.getSelectedCollectionCoverImageUrl()
                 )
-                textViewContentTitle.text = it.title
-                textViewContentDescription.text = it.description
-                textViewContentPublishDate.text = it.publishDate
+                textViewContentTitle.text = title
+                textViewContentDescription.text = description
+                textViewContentPublishDate.text = publishDate
             }
         }
     }
@@ -172,7 +172,7 @@ class PlayFragment : DaggerFragment() {
                 }
 
                 mViewModel.playPodcast(
-                    url = getData()?.contentUrl ?: "",
+                    url = mArguments.contentFeed.contentUrl,
                     forceUpdate = mForceUpdate
                 )
 
@@ -256,6 +256,7 @@ class PlayFragment : DaggerFragment() {
 
     private fun setCurrentDuration(duration: Int) {
         mBinding.apply {
+            // avoid seek bar unexpected moving
             if (!mDragging) {
                 seekBarPodCast.progress = duration
             }
@@ -301,14 +302,8 @@ class PlayFragment : DaggerFragment() {
      */
     private fun initFlags() {
         val playingUrl = mViewModel.getCurrentPlayingUrl()
-        val currentUrl = getData()?.contentUrl ?: ""
+        val currentUrl = mArguments.contentFeed.contentUrl
         mForceUpdate = playingUrl != currentUrl
         mPlayingContent = playingUrl.isEmpty() || playingUrl == currentUrl
     }
-
-    /**
-     * Get selected content data
-     */
-    private fun getData(): CollectionVhBindingModel.ContentVhBindingModel? =
-        mViewModel.getContentFeed(mArguments.index)
 }
