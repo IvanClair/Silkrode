@@ -79,6 +79,9 @@ class PodcastListFragment : DaggerFragment() {
 
     /* ------------------------------ UI */
 
+    /**
+     * Show or hide loading progress
+     */
     private fun switchLoadingStatus(enable: Boolean) {
         mBinding.progressBarLoading enableOrDisable enable
     }

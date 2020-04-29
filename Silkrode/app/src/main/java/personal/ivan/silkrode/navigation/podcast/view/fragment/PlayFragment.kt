@@ -154,7 +154,7 @@ class PlayFragment : DaggerFragment() {
             mBinding.apply {
                 glideUtil.loadPodcastCover(
                     imageView = imageViewCover,
-                    url = mViewModel.getSelectedCoverImageUrl()
+                    url = mViewModel.getSelectedCollectionCoverImageUrl()
                 )
                 textViewContentTitle.text = it.title
                 textViewContentDescription.text = it.description
@@ -310,5 +310,5 @@ class PlayFragment : DaggerFragment() {
      * Get selected content data
      */
     private fun getData(): CollectionVhBindingModel.ContentVhBindingModel? =
-        mViewModel.getContent(mArguments.index)
+        mViewModel.getContentFeed(mArguments.index)
 }

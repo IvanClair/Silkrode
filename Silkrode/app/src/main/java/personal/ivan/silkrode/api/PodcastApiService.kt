@@ -8,5 +8,5 @@ interface PodcastApiService {
     suspend fun getPodcastList(): PodcastApiResponse<PodcastData>
 
     @GET("getcastdetail")
-    suspend fun getCastDetail(): PodcastApiResponse<CollectionData>
+    suspend fun getCollection(): PodcastApiResponse<CollectionData>
 }

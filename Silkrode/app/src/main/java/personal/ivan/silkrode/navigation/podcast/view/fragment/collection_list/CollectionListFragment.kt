@@ -13,10 +13,10 @@ import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.R
+import personal.ivan.silkrode.api.ApiStatus
 import personal.ivan.silkrode.databinding.FragmentCollectionListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.enableOrDisable
-import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.GlideUtil
@@ -87,24 +87,14 @@ class CollectionListFragment : DaggerFragment() {
     private fun observeLiveData() {
         mViewModel.apply {
 
-            // API status - loading
-            apiLoading.observe(
-                viewLifecycleOwner,
-                Observer { mBinding.progressBarLoading enableOrDisable it })
-
-            // API status - fail
-            apiFail.observe(
-                viewLifecycleOwner,
-                Observer { context?.showApiErrorAlert() })
-
             // collection from API response
             collectionBindingModel.observe(
                 viewLifecycleOwner,
-                Observer { model ->
-                    // check null since API may be canceled
-                    model?.apply {
+                Observer {
+                    switchLoadingStatus(enable = it.status == ApiStatus.LOADING)
+                    if (it.status == ApiStatus.SUCCESS) {
                         mApiDataLoaded = true
-                        loadCoverImage(url = coverImageUrl)
+                        loadCoverImage(url = mViewModel.getSelectedCollectionCoverImageUrl())
                         setToolbarTitle()
                         updateRecyclerView()
                     }
@@ -120,11 +110,15 @@ class CollectionListFragment : DaggerFragment() {
     private fun setNavBackIcon() {
         mBinding.toolbar.apply {
             navigationIcon?.setTint(ContextCompat.getColor(context, R.color.navIconColor))
-            setNavigationOnClickListener {
-                mViewModel.clearCollectionBindingModel()
-                findNavController().navigateUp()
-            }
+            setNavigationOnClickListener { findNavController().navigateUp() }
         }
+    }
+
+    /**
+     * Show or hide loading progress
+     */
+    private fun switchLoadingStatus(enable: Boolean) {
+        mBinding.progressBarLoading enableOrDisable enable
     }
 
     /**

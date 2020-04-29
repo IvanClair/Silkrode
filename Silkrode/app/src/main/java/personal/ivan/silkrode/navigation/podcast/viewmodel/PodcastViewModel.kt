@@ -5,42 +5,27 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import androidx.lifecycle.switchMap
 import personal.ivan.silkrode.SilkrodeApplication
-import personal.ivan.silkrode.api.ApiStatus
-import personal.ivan.silkrode.api.Collection
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.api.PodcastRepository
-import personal.ivan.silkrode.navigation.podcast.model.CollectionBindingModel
 import personal.ivan.silkrode.navigation.podcast.model.CollectionVhBindingModel
 import personal.ivan.silkrode.service.PodcastAudioService
-import personal.ivan.silkrode.util.DateFormatUtil
 import javax.inject.Inject
 
 class PodcastViewModel @Inject constructor(
     application: SilkrodeApplication,
-    private val mRepository: PodcastRepository,
-    private val mDateFormatUtil: DateFormatUtil
+    private val mRepository: PodcastRepository
 ) : AndroidViewModel(application) {
 
-    // API status
-    val apiLoading = MutableLiveData<Boolean>()
-    val apiFail = MutableLiveData<Boolean>()
-
     // API response - podcast list
-    val podcastList: LiveData<ApiStatus<List<Podcast>>> = mRepository.fetchPodcastList()
+    val podcastList = mRepository.getPodcastList()
 
-    // Collection Binding Model
-    private lateinit var mCollectionApiJob: Job
-    val collectionBindingModel = MutableLiveData<CollectionBindingModel>()
+    // API response - Collection Binding Model
+    private val mSelectedPodcastId = MutableLiveData<String>()
+    val collectionBindingModel = mSelectedPodcastId.switchMap { mRepository.getCollectionn() }
 
     // Binding Model - Play
     val audioControlsEnabled = MutableLiveData<Boolean>()
@@ -52,31 +37,8 @@ class PodcastViewModel @Inject constructor(
     /**
      * Request collection API
      */
-    // todo boilerplate code can be improved, also maybe this API should use [Podcast.id] to request?
     fun requestCollectionApi(id: String) {
-        Log.d(PodcastViewModel::class.simpleName, id)
-        mCollectionApiJob =
-            viewModelScope.launch {
-                apiLoading.value = true
-                val result = mRepository.getCastDetail()
-                if (result != null) createCollectionBindingModel(data = result)
-                apiLoading.value = false
-            }
-    }
-
-    /**
-     * Due to format date string cost too much performance,
-     * so it is better to format it on background
-     */
-    private suspend fun createCollectionBindingModel(data: Collection) {
-        withContext(Dispatchers.IO) {
-            val bindingModel =
-                CollectionBindingModel(
-                    data = data,
-                    util = mDateFormatUtil
-                )
-            collectionBindingModel.postValue(bindingModel)
-        }
+        mSelectedPodcastId.value = id
     }
 
     /* ------------------------------ Service */
@@ -188,28 +150,18 @@ class PodcastViewModel @Inject constructor(
     /**
      * Get collection view holder list
      */
-    fun getCollectionList(): List<CollectionVhBindingModel>? =
-        collectionBindingModel.value?.vhModelList
+    fun getCoententFeedList(): List<CollectionVhBindingModel>? =
+        collectionBindingModel.value?.data?.vhModelList
 
     /**
      * Get selected cover image
      */
-    fun getSelectedCoverImageUrl(): String =
-        collectionBindingModel.value?.coverImageUrl ?: ""
-
-    /**
-     * Clear collection binding model
-     *
-     * make sure every time user can get the correct data
-     */
-    fun clearCollectionBindingModel() {
-        mCollectionApiJob.cancel()
-        collectionBindingModel.value = null
-    }
+    fun getSelectedCollectionCoverImageUrl(): String =
+        collectionBindingModel.value?.data?.coverImageUrl ?: ""
 
     /**
      * Get selected content
      */
-    fun getContent(index: Int): CollectionVhBindingModel.ContentVhBindingModel? =
-        getCollectionList()?.getOrNull(index) as? CollectionVhBindingModel.ContentVhBindingModel
+    fun getContentFeed(index: Int): CollectionVhBindingModel.ContentVhBindingModel? =
+        getCoententFeedList()?.getOrNull(index) as? CollectionVhBindingModel.ContentVhBindingModel
 }

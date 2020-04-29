@@ -21,7 +21,7 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
     private var mListener: OnPodcastItemClickListener? = null
 
     /*
-        Prevent double click
+        Prevent fast double click
      */
     companion object {
         private var lastClickTime = 0L

@@ -6,15 +6,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import personal.ivan.silkrode.api.PodcastRepository
 import personal.ivan.silkrode.api.PodcastApiService
+import personal.ivan.silkrode.api.PodcastRepository
 import personal.ivan.silkrode.di.ViewModelKey
 import personal.ivan.silkrode.navigation.podcast.view.PodcastActivity
-import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListAdapter
 import personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
+import personal.ivan.silkrode.util.DateFormatUtil
 import personal.ivan.silkrode.util.GlideUtil
 import retrofit2.Retrofit
 import javax.inject.Scope
@@ -80,7 +81,10 @@ object PodcastRepositoryModule {
     @JvmStatic
     @PodcastScope
     @Provides
-    fun providePodCastRepository(service: PodcastApiService) = PodcastRepository(mService = service)
+    fun providePodCastRepository(
+        service: PodcastApiService,
+        util: DateFormatUtil
+    ) = PodcastRepository(mService = service, mUtil = util)
 
     @JvmStatic
     @PodcastScope

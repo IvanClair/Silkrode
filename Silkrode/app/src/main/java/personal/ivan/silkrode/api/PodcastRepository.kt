@@ -1,33 +1,48 @@
 package personal.ivan.silkrode.api
 
+import personal.ivan.silkrode.navigation.podcast.model.CollectionBindingModel
+import personal.ivan.silkrode.util.DateFormatUtil
 import javax.inject.Inject
 
-/*
-    TODO Retrofit throws exception if network is unavailable,
-     maybe they will update in future, keep an eye on new release
- */
-class PodcastRepository @Inject constructor(private val mService: PodcastApiService) {
+class PodcastRepository @Inject constructor(
+    private val mService: PodcastApiService,
+    private val mUtil: DateFormatUtil
+) {
 
     /**
      * Get podcast list
      */
-    fun fetchPodcastList() =
+    fun getPodcastList() =
         object : ApiUtil<PodcastApiResponse<PodcastData>, List<Podcast>>() {
-
             override suspend fun getApiResponse(): PodcastApiResponse<PodcastData> =
                 mService.getPodcastList()
 
-            override suspend fun convertResponse(apiRs: PodcastApiResponse<PodcastData>): List<Podcast>? =
+            override suspend fun convertResponse(apiRs: PodcastApiResponse<PodcastData>) =
                 apiRs.data?.podcastList
+
+        }.getLiveData()
+
+    fun getCollectionn() =
+        object : ApiUtil<PodcastApiResponse<CollectionData>, CollectionBindingModel>() {
+            override suspend fun getApiResponse(): PodcastApiResponse<CollectionData> =
+                mService.getCollection()
+
+            override suspend fun convertResponse(apiRs: PodcastApiResponse<CollectionData>) =
+                apiRs.data?.collection?.let {
+                    CollectionBindingModel(
+                        data = it,
+                        util = mUtil
+                    )
+                }
 
         }.getLiveData()
 
     /**
      * Get collection of a certain artist
      */
-    suspend fun getCastDetail(): Collection? =
+    suspend fun getCollection(): Collection? =
         try {
-            mService.getCastDetail().data?.collection
+            mService.getCollection().data?.collection
         } catch (e: Exception) {
             null
         }
