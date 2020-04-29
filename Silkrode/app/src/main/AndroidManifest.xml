@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--  Allow to play audio even lock the device  -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".SilkrodeApplication"
         android:allowBackup="true"
@@ -12,13 +15,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".navigation.podcast.view.PodcastActivity">
+        <activity
+            android:name=".navigation.podcast.view.PodcastActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service
+            android:name=".service.PodcastAudioService"
+            android:exported="false" />
+    </application>
 </manifest>

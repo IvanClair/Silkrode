@@ -5,4 +5,5 @@
     <string name="alert_title">Oops</string>
     <string name="alert_message">Something went wrong, please try again.</string>
     <string name="label_ok">OK</string>
+    <string name="label_default_time">00:00</string>
 </resources>

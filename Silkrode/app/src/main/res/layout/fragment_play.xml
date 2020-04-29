@@ -19,13 +19,117 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/abc_vector_test"
-            tools:ignore="PrivateResource" />
+            tools:ignore="PrivateResource">
+
+            <ProgressBar
+                android:id="@+id/progress_bar_loading"
+                style="@style/SilkRodeProgressBar" />
+        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:id="@+id/text_view_content_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/image_view_pause_or_play"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:id="@+id/image_view_cover"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:contentDescription="@null"
+                app:layout_constraintDimensionRatio="W,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_launcher_foreground" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_view_current_duration"
+                style="@style/SilkRodeTextView.Duration"
+                android:layout_marginStart="16dp"
+                android:text="@string/label_default_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_cover" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_view_total_duration"
+                style="@style/SilkRodeTextView.Duration"
+                android:layout_marginEnd="16dp"
+                android:text="@string/label_default_time"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_cover" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seek_bar_pod_cast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/text_view_total_duration"
+                app:layout_constraintStart_toEndOf="@+id/text_view_current_duration"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_cover" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_view_content_title"
+                style="@style/SilkRodeTextView.ContentTitle"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/seek_bar_pod_cast"
+                tools:text="What happens when a Silicon Valley technologist works for the government | Matt Cutts" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_view_content_description"
+                style="@style/SilkRodeTextView.ContentDescription"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_content_title"
+                tools:text="What if the government ran more like Silicon Valley? Engineer Matt Cutts shares why he decided to leave Google (where he worked for nearly 17 years) for a career in the US government -- and makes the case that if you really want to make an impact, go where your help is needed most." />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/text_view_content_publish_date"
+                style="@style/SilkRodeTextView.Date"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_content_description"
+                tools:text="Mon, 09 Mar 2020" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/image_view_pause_or_play"
+        style="@style/SilkRodeAudioControlImageView"
+        android:contentDescription="@null"
+        android:src="@drawable/play_arrow_24px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_view_replay"
+        style="@style/SilkRodeAudioControlImageView"
+        android:contentDescription="@null"
+        android:src="@drawable/replay_30_24px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/image_view_pause_or_play"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_view_forward"
+        style="@style/SilkRodeAudioControlImageView"
+        android:contentDescription="@null"
+        android:src="@drawable/forward_30_24px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image_view_pause_or_play" />
 </androidx.constraintlayout.widget.ConstraintLayout>

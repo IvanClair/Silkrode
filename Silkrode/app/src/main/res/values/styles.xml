@@ -56,7 +56,24 @@
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
-    <style name="SilkRodeTextView.DateInformation" parent="SilkRodeTextView">
+    <style name="SilkRodeTextView.ContentDescription" parent="SilkRodeTextView">
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2
+        </item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+    </style>
+
+    <style name="SilkRodeTextView.Date" parent="SilkRodeTextView">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption
+        </item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+    </style>
+
+    <style name="SilkRodeTextView.Duration" parent="SilkRodeTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Caption
         </item>
         <item name="android:textColor">@color/textColorSecondary</item>
@@ -76,5 +93,22 @@
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginTop">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
+    </style>
+
+    <!--  Audio Control ImageView  -->
+    <style name="SilkRodeAudioControlImageView">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tint">@color/colorPrimaryDark</item>
+    </style>
+
+    <!--  ProgressBar on AppBarLayout  -->
+    <style name="SilkRodeProgressBar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_gravity">end|center_vertical</item>
     </style>
 </resources>

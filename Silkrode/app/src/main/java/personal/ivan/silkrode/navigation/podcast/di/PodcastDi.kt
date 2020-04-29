@@ -99,9 +99,4 @@ object PodcastModule {
     @PodcastScope
     @Provides
     fun providePodcastListAdapter(util: GlideUtil) = PodcastListAdapter(mUtil = util)
-
-    @JvmStatic
-    @PodcastScope
-    @Provides
-    fun provideCollectionListAdapter() = CollectionListAdapter()
 }
