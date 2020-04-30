@@ -118,7 +118,7 @@ class PodcastListFragment : DaggerFragment() {
      */
     private fun updateRecyclerView() {
         (mBinding.recyclerViewPodcast.adapter as? PodcastListAdapter)
-            ?.updateDataSource(viewModel = mViewModel)
+            ?.submitList(mViewModel.getPodcastList())
     }
 
     /* ------------------------------ Navigation */

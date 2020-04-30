@@ -3,17 +3,14 @@ package personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.databinding.VhPodcastBinding
 import personal.ivan.silkrode.di.GlideApp
-import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 
-class PodcastListAdapter : RecyclerView.Adapter<PodcastListAdapter.ViewHolder>() {
-
-    // Data Source
-    // todo easy to extend, e.g. sort by artist, topic ... etc
-    private val mDataList = mutableListOf<Podcast>()
+class PodcastListAdapter : ListAdapter<Podcast, PodcastListAdapter.ViewHolder>(DiffCallback()) {
 
     // Listener
     private var mListener: OnPodcastItemClickListener? = null
@@ -39,6 +36,13 @@ class PodcastListAdapter : RecyclerView.Adapter<PodcastListAdapter.ViewHolder>()
         fun onClick(imageView: ImageView, id: String)
     }
 
+    /**
+     * Item click listener
+     */
+    fun setOnItemClickListener(listener: OnPodcastItemClickListener?) {
+        this.mListener = listener
+    }
+
     /* ------------------------------ Override */
 
     override fun onCreateViewHolder(
@@ -54,42 +58,14 @@ class PodcastListAdapter : RecyclerView.Adapter<PodcastListAdapter.ViewHolder>()
             )
         )
 
-    override fun getItemCount(): Int = mDataList.size
-
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int
     ) {
-        mDataList
-            .getOrNull(position)
-            ?.also {
-                holder.bind(
-                    data = it,
-                    listener = mListener
-                )
-            }
-    }
-
-    /**
-     * Update data source from [PodcastViewModel]
-     */
-    fun updateDataSource(viewModel: PodcastViewModel) {
-        viewModel
-            .getPodcastList()
-            ?.also {
-                mDataList.apply {
-                    clear()
-                    addAll(it)
-                }
-                notifyDataSetChanged()
-            }
-    }
-
-    /**
-     * Item click listener
-     */
-    fun setOnItemClickListener(listener: OnPodcastItemClickListener?) {
-        this.mListener = listener
+        holder.bind(
+            data = getItem(position),
+            listener = mListener
+        )
     }
 
     /* ------------------------------ View Holder */
@@ -121,5 +97,19 @@ class PodcastListAdapter : RecyclerView.Adapter<PodcastListAdapter.ViewHolder>()
                 textViewPodcastName.text = data.channelName
             }
         }
+    }
+
+    /* ------------------------------ Diff */
+
+    class DiffCallback : DiffUtil.ItemCallback<Podcast>() {
+        override fun areItemsTheSame(
+            oldItem: Podcast,
+            newItem: Podcast
+        ) = oldItem == newItem
+
+        override fun areContentsTheSame(
+            oldItem: Podcast,
+            newItem: Podcast
+        ) = oldItem.hashCode() == newItem.hashCode()
     }
 }
