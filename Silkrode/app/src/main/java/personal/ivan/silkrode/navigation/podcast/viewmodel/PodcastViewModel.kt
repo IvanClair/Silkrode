@@ -160,11 +160,6 @@ class PodcastViewModel @Inject constructor(
     fun getPodcastList(): List<Podcast>? = podcastList.value?.data
 
     /**
-     * Get collection by id
-     */
-    fun didRequestCollection(id: String) = id == mSelectedPodcastId.value
-
-    /**
      * Get collection view holder list
      */
     fun getContentFeedList(): List<CollectionVhBindingModel>? =

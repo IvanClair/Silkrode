@@ -15,11 +15,11 @@ import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.databinding.FragmentPlayBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
+import personal.ivan.silkrode.di.GlideApp
 import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.extension.setTintForPlayerStatus
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.DateFormatUtil
-import personal.ivan.silkrode.util.GlideUtil
 import javax.inject.Inject
 
 class PlayFragment : DaggerFragment() {
@@ -28,10 +28,6 @@ class PlayFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
-
-    // Glide
-    @Inject
-    lateinit var glideUtil: GlideUtil
 
     // Date Util
     @Inject
@@ -152,10 +148,10 @@ class PlayFragment : DaggerFragment() {
     private fun setUpInformation() {
         with(mArguments.contentFeed) {
             mBinding.apply {
-                glideUtil.loadPodcastCover(
-                    imageView = imageViewCover,
-                    url = mViewModel.getSelectedCollectionCoverImageUrl()
-                )
+                GlideApp
+                    .with(imageViewCover)
+                    .load(mViewModel.getSelectedCollectionCoverImageUrl())
+                    .into(imageViewCover)
                 textViewContentTitle.text = title
                 textViewContentDescription.text = description
                 textViewContentPublishDate.text = publishDate
