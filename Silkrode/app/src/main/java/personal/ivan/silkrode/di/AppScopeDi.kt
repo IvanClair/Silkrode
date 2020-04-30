@@ -87,6 +87,11 @@ object DbModule {
     @Singleton
     @Provides
     fun providePodcastDao(db: AppDb) = db.podcastDao()
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideCollectionDao(db: AppDb) = db.collectionDao()
 }
 
 /* ------------------------------ Retrofit */

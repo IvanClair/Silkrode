@@ -25,7 +25,8 @@ class PodcastViewModel @Inject constructor(
 
     // API response - Collection Binding Model
     private val mSelectedPodcastId = MutableLiveData<String>()
-    val collectionBindingModel = mSelectedPodcastId.switchMap { mRepository.getCollection() }
+    val collectionBindingModel =
+        mSelectedPodcastId.switchMap { mRepository.getCollection(collectionId = it.toInt()) }
     val expandCollapsingToolBarLayout = MutableLiveData<Boolean>()
 
     // Binding Model - Play
@@ -161,7 +162,7 @@ class PodcastViewModel @Inject constructor(
     /**
      * Get collection by id
      */
-    fun didCollection(id: String): Boolean = id == mSelectedPodcastId.value
+    fun didRequestCollection(id: String) = id == mSelectedPodcastId.value
 
     /**
      * Get collection view holder list

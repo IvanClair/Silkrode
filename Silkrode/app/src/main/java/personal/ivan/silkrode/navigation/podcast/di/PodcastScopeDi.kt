@@ -8,6 +8,7 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import personal.ivan.silkrode.api.PodcastApiService
 import personal.ivan.silkrode.api.PodcastRepository
+import personal.ivan.silkrode.db.CollectionDao
 import personal.ivan.silkrode.db.PodcastDao
 import personal.ivan.silkrode.di.ViewModelKey
 import personal.ivan.silkrode.navigation.podcast.view.PodcastActivity
@@ -85,11 +86,13 @@ object PodcastRepositoryModule {
     fun providePodCastRepository(
         service: PodcastApiService,
         podcastDao: PodcastDao,
+        collectionDao: CollectionDao,
         util: DateFormatUtil
     ) =
         PodcastRepository(
             mService = service,
             mPodcastDao = podcastDao,
+            mCollectionDao = collectionDao,
             mUtil = util
         )
 
