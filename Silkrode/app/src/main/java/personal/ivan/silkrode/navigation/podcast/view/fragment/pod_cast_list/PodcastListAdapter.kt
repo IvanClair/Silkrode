@@ -110,7 +110,7 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
                     if (allowClick()) {
                         listener?.onClick(
                             imageView = imageViewCover,
-                            id = data.id ?: ""
+                            id = data.id
                         )
                     }
                 }

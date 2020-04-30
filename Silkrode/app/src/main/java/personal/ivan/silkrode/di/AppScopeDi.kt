@@ -2,6 +2,7 @@ package personal.ivan.silkrode.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import dagger.*
@@ -12,6 +13,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import personal.ivan.silkrode.BuildConfig
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.SilkrodeApplication
+import personal.ivan.silkrode.db.AppDb
 import personal.ivan.silkrode.navigation.podcast.di.PodcastActivityModule
 import personal.ivan.silkrode.util.DateFormatUtil
 import personal.ivan.silkrode.util.GlideUtil
@@ -28,9 +30,10 @@ import kotlin.reflect.KClass
     modules = [
         AndroidInjectionModule::class,
         ViewModelModule::class,
+        DbModule::class,
         RetrofitModule::class,
         GlideModule::class,
-        DateFormatModule::class,
+        UtilModule::class,
         PodcastActivityModule::class
     ]
 )
@@ -61,6 +64,30 @@ abstract class ViewModelModule {
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
 annotation class ViewModelKey(val value: KClass<out ViewModel>)
+
+/* ------------------------------ Database */
+
+@Module
+object DbModule {
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun provideAppDb(application: SilkrodeApplication) =
+        Room
+            .databaseBuilder(
+                application,
+                AppDb::class.java,
+                application.packageName
+            )
+            .fallbackToDestructiveMigration()
+            .build()
+
+    @JvmStatic
+    @Singleton
+    @Provides
+    fun providePodcastDao(db: AppDb) = db.podcastDao()
+}
 
 /* ------------------------------ Retrofit */
 
@@ -157,10 +184,10 @@ object GlideModule {
         )
 }
 
-/* ------------------------------ Date Format */
+/* ------------------------------ Util */
 
 @Module
-object DateFormatModule {
+object UtilModule {
 
     @JvmStatic
     @Singleton

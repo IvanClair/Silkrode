@@ -17,14 +17,28 @@ abstract class ApiUtil<T, R> {
             //     maybe they will update in future, keep an eye on new release
             try {
 
+                // load from database
+                val fromDb = loadFromDb()
+                if (fromDb != null) {
+                    emit(ApiStatus.success(data = fromDb))
+                }
+
                 // get API response
-                val apiRs = getApiResponse()
+                val apiRs = loadFromNetwork()
 
                 // convert API response to actual needed model in background
                 withContext(Dispatchers.IO) {
                     val convertedRs = convertResponse(apiRs = apiRs)
-                    if (convertedRs != null) emit(ApiStatus.success(data = convertedRs))
-                    else emit(ApiStatus.fail())
+                    when {
+                        // load from network succeed
+                        convertedRs != null -> {
+                            saveToDb(convertedRs)
+                            emit(ApiStatus.success(data = convertedRs))
+                        }
+
+                        // load from network failed, and did not save in database
+                        fromDb == null -> emit(ApiStatus.fail())
+                    }
                 }
             } catch (e: Exception) {
 
@@ -39,7 +53,11 @@ abstract class ApiUtil<T, R> {
 
     /* ------------------------------ Override Functions */
 
-    protected abstract suspend fun getApiResponse(): T
+    protected abstract suspend fun loadFromDb(): R?
+
+    protected abstract suspend fun loadFromNetwork(): T
 
     protected abstract suspend fun convertResponse(apiRs: T): R?
+
+    protected abstract suspend fun saveToDb(data: R)
 }
