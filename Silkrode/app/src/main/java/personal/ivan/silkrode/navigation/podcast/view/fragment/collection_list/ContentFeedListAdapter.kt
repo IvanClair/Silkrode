@@ -3,18 +3,16 @@ package personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import personal.ivan.silkrode.databinding.VhCollectionContentBinding
 import personal.ivan.silkrode.databinding.VhCollectionInformationBinding
 import personal.ivan.silkrode.navigation.podcast.model.CollectionVhBindingModel
-import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 
-class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.CollectionViewHolder>() {
-
-    // Data Source
-    // todo easy to extend, e.g. sort by season, topic ... etc
-    private var mDataList: MutableList<CollectionVhBindingModel> = mutableListOf()
+class ContentFeedListAdapter :
+    ListAdapter<CollectionVhBindingModel, ContentFeedListAdapter.CollectionViewHolder>(DiffCallback()) {
 
     // Listener
     private var mListener: View.OnClickListener? = null
@@ -34,12 +32,17 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
         }
     }
 
+    /**
+     * Item click listener
+     */
+    fun setOnItemClickListener(listener: View.OnClickListener?) {
+        this.mListener = listener
+    }
+
     /* ------------------------------ Override */
 
     override fun getItemViewType(position: Int): Int =
-        mDataList.getOrNull(position)
-            ?.viewType
-            ?: CollectionVhBindingModel.VIEW_TYPE_COLLECTION_INFORMATION
+        getItem(position).viewType
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -69,46 +72,22 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
         }
     }
 
-    override fun getItemCount(): Int = mDataList.size
-
     override fun onBindViewHolder(
         holder: CollectionViewHolder,
         position: Int
     ) {
-        mDataList
-            .getOrNull(position)
-            ?.also {
-                when (holder) {
-                    is CollectionViewHolder.CollectionInfoViewHolder -> holder.bind(data = it)
-                    is CollectionViewHolder.ContentViewHolder -> holder.bind(
-                        data = it,
-                        index = position,
-                        listener = mListener
-                    )
-                }
+        getItem(position).also {
+            when (holder) {
+                is CollectionViewHolder.CollectionInfoViewHolder -> holder.bind(
+                    data = it
+                )
+                is CollectionViewHolder.ContentViewHolder -> holder.bind(
+                    data = it,
+                    index = position,
+                    listener = mListener
+                )
             }
-    }
-
-    /**
-     * Update data source from [PodcastViewModel]
-     */
-    fun updateDataSource(viewModel: PodcastViewModel) {
-        viewModel
-            .getContentFeedList()
-            ?.also {
-                mDataList.apply {
-                    clear()
-                    addAll(it)
-                }
-                notifyDataSetChanged()
-            }
-    }
-
-    /**
-     * Item click listener
-     */
-    fun setOnItemClickListener(listener: View.OnClickListener?) {
-        this.mListener = listener
+        }
     }
 
     /* ------------------------------ View Holder */
@@ -147,7 +126,11 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
                     mBinding.apply {
                         root.apply {
                             tag = index
-                            setOnClickListener(listener)
+                            setOnClickListener {
+                                if (allowClick()) {
+                                    listener?.onClick(this)
+                                }
+                            }
                         }
                         textViewContentTitle.text = data.title
                         textViewContentPublishDate.text = data.publishDate
@@ -155,5 +138,19 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
                 }
             }
         }
+    }
+
+    /* ------------------------------ Diff */
+
+    class DiffCallback : DiffUtil.ItemCallback<CollectionVhBindingModel>() {
+        override fun areItemsTheSame(
+            oldItem: CollectionVhBindingModel,
+            newItem: CollectionVhBindingModel
+        ) = oldItem == newItem
+
+        override fun areContentsTheSame(
+            oldItem: CollectionVhBindingModel,
+            newItem: CollectionVhBindingModel
+        ) = oldItem.hashCode() == newItem.hashCode()
     }
 }
