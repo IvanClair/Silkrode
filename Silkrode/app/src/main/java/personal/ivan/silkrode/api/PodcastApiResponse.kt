@@ -22,16 +22,9 @@ data class Podcast(
 data class CollectionData(val collection: Collection?)
 
 data class Collection(
-    val artistId: String?,
-    val artistName: String?,
-    @field:Json(name = "artworkUrl100") val smallCoverImgUrl: String?,
     @field:Json(name = "artworkUrl600") val bigCoverImgUrl: String?,
-    val collectionId: Int?,
     val collectionName: String?,
     @field:Json(name = "contentFeed") val contentFeedList: List<ContentFeed>?,
-    val country: String?,
-    val genreIds: String?,
-    val genres: String?,
     val releaseDate: String?
 ) {
     companion object {

@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_podcast"
-    app:startDestination="@id/PodcastListFragment"
+    app:startDestination="@id/podcastListFragment"
     tools:ignore="UnusedNavigation">
 
     <fragment
-        android:id="@+id/PodcastListFragment"
+        android:id="@+id/podcastListFragment"
         android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment"
         android:label="ChannelListFragment"
         tools:layout="@layout/fragment_podcast_list">
@@ -22,7 +22,11 @@
         tools:layout="@layout/fragment_collection_list">
         <action
             android:id="@+id/navigateToPlay"
-            app:destination="@id/playFragment" />
+            app:destination="@id/playFragment"
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@anim/slide_out_down" />
         <argument
             android:name="id"
             app:argType="string" />
@@ -34,7 +38,7 @@
         tools:layout="@layout/fragment_play">
 
         <argument
-            android:name="index"
-            app:argType="integer" />
+            android:name="contentFeed"
+            app:argType="personal.ivan.silkrode.navigation.podcast.model.CollectionVhBindingModel$ContentVhBindingModel" />
     </fragment>
 </navigation>

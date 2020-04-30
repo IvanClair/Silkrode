@@ -11,10 +11,11 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.android.support.DaggerFragment
+import personal.ivan.silkrode.api.ApiStatus
 import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
-import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.extension.enableOrDisable
+import personal.ivan.silkrode.extension.showApiErrorAlert
 import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
@@ -63,24 +64,27 @@ class PodcastListFragment : DaggerFragment() {
     private fun observeLiveData() {
         mViewModel.apply {
 
-            // API status - loading
-            apiLoading.observe(
-                viewLifecycleOwner,
-                Observer { mBinding.progressBarLoading enableOrDisable it })
-
-            // API status - fail
-            apiFail.observe(
-                viewLifecycleOwner,
-                Observer { context?.showApiErrorAlert() })
-
             // podcast list from API response
             podcastList.observe(
                 viewLifecycleOwner,
-                Observer { updateRecyclerView() })
+                Observer {
+                    switchLoadingStatus(enable = it.status == ApiStatus.LOADING)
+                    when (it.status) {
+                        ApiStatus.FAIL -> context?.showApiErrorAlert()
+                        ApiStatus.SUCCESS -> updateRecyclerView()
+                    }
+                })
         }
     }
 
     /* ------------------------------ UI */
+
+    /**
+     * Show or hide loading progress
+     */
+    private fun switchLoadingStatus(enable: Boolean) {
+        mBinding.progressBarLoading enableOrDisable enable
+    }
 
     /**
      * Initial podcast list
@@ -132,5 +136,6 @@ class PodcastListFragment : DaggerFragment() {
             PodcastListFragmentDirections.navigateToCollectionList(id = id),
             FragmentNavigatorExtras(imageView to id)
         )
+        mViewModel.setCoverImageExpand(expand = true)
     }
 }

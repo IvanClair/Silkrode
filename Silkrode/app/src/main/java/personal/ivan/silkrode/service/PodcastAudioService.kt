@@ -76,6 +76,8 @@ class PodcastAudioService : Service() {
                 start()
                 mPrepared = true
                 mPlayingUrl = url
+
+                // call back with total duration
                 prepareCompleteCallback.invoke(mPlayer.duration)
             }
 
@@ -123,16 +125,20 @@ class PodcastAudioService : Service() {
         direct: Boolean
     ) {
         GlobalScope.launch(Dispatchers.IO) {
+
             // total duration of the podcast
             val duration = mPlayer.duration
+
             // adjusted position of the podcast
             val adjustedPosition =
                 if (direct) seconds
                 else mPlayer.currentPosition + seconds * 1000
+
             // final position depends on the params above
             val finalPosition =
                 if (adjustedPosition > duration) duration
                 else adjustedPosition
+
             // seek to position
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 mPlayer.seekTo(finalPosition.toLong(), SEEK_CLOSEST)

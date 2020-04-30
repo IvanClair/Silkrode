@@ -20,7 +20,7 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
     private var mListener: View.OnClickListener? = null
 
     /*
-        Prevent double click
+        Prevent fast double click
      */
     companion object {
         private var lastClickTime = 0L
@@ -94,7 +94,7 @@ class CollectionListAdapter : RecyclerView.Adapter<CollectionListAdapter.Collect
      */
     fun updateDataSource(viewModel: PodcastViewModel) {
         viewModel
-            .getCollectionList()
+            .getContentFeedList()
             ?.also {
                 mDataList.apply {
                     clear()
