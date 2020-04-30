@@ -13,7 +13,7 @@ import personal.ivan.silkrode.db.PodcastDao
 import personal.ivan.silkrode.di.ViewModelKey
 import personal.ivan.silkrode.navigation.podcast.view.PodcastActivity
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
-import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionFragment
 import personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import personal.ivan.silkrode.util.DateFormatUtil
@@ -53,7 +53,7 @@ abstract class PodcastFragmentModule {
     abstract fun contributePodcastListFragment(): PodcastListFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeCollectionListFragment(): CollectionListFragment
+    abstract fun contributeCollectionListFragment(): CollectionFragment
 
     @ContributesAndroidInjector
     abstract fun contributePlayFragment(): PlayFragment

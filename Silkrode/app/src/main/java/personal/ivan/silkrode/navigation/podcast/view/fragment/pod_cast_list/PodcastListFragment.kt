@@ -16,7 +16,7 @@ import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.extension.showApiErrorAlert
-import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
 
@@ -118,13 +118,13 @@ class PodcastListFragment : DaggerFragment() {
      */
     private fun updateRecyclerView() {
         (mBinding.recyclerViewPodcast.adapter as? PodcastListAdapter)
-            ?.updateDataSource(viewModel = mViewModel)
+            ?.submitList(mViewModel.getPodcastList())
     }
 
     /* ------------------------------ Navigation */
 
     /**
-     * Navigate to [CollectionListFragment]
+     * Navigate to [CollectionFragment]
      */
     private fun navigateToCollectionList(
         imageView: ImageView,
@@ -135,7 +135,7 @@ class PodcastListFragment : DaggerFragment() {
             it.requestCollectionApi(id = id)
         }
         findNavController().navigate(
-            PodcastListFragmentDirections.navigateToCollectionList(id = id),
+            PodcastListFragmentDirections.navigateToCollection(id = id),
             FragmentNavigatorExtras(imageView to id)
         )
     }

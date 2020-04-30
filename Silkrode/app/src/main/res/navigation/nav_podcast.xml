@@ -9,19 +9,19 @@
     <fragment
         android:id="@+id/podcastListFragment"
         android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.pod_cast_list.PodcastListFragment"
-        android:label="ChannelListFragment"
+        android:label="podcastListFragment"
         tools:layout="@layout/fragment_podcast_list">
         <action
-            android:id="@+id/navigate_to_collection_list"
-            app:destination="@id/collectionListFragment" />
+            android:id="@+id/navigate_to_collection"
+            app:destination="@id/collectionFragment" />
     </fragment>
     <fragment
-        android:id="@+id/collectionListFragment"
-        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionListFragment"
-        android:label="ProgramListFragment"
-        tools:layout="@layout/fragment_collection_list">
+        android:id="@+id/collectionFragment"
+        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionFragment"
+        android:label="collectionFragment"
+        tools:layout="@layout/fragment_collection">
         <action
-            android:id="@+id/navigateToPlay"
+            android:id="@+id/navigate_to_play"
             app:destination="@id/playFragment"
             app:enterAnim="@anim/slide_in_up"
             app:exitAnim="@android:anim/fade_out"

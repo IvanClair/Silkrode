@@ -15,7 +15,7 @@ import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.api.ApiStatus
-import personal.ivan.silkrode.databinding.FragmentCollectionListBinding
+import personal.ivan.silkrode.databinding.FragmentCollectionBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.di.GlideApp
 import personal.ivan.silkrode.extension.enableOrDisable
@@ -24,7 +24,7 @@ import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
 import kotlin.math.abs
 
-class CollectionListFragment : DaggerFragment() {
+class CollectionFragment : DaggerFragment() {
 
     // View Model
     @Inject
@@ -32,10 +32,10 @@ class CollectionListFragment : DaggerFragment() {
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
 
     // View Binding
-    private lateinit var mBinding: FragmentCollectionListBinding
+    private lateinit var mBinding: FragmentCollectionBinding
 
     // Argument
-    private val mArguments by navArgs<CollectionListFragmentArgs>()
+    private val mArguments by navArgs<CollectionFragmentArgs>()
 
     // Flag
     private var mApiDataLoaded: Boolean = false
@@ -58,7 +58,7 @@ class CollectionListFragment : DaggerFragment() {
         savedInstanceState: Bundle?
     ): View? {
         mBinding =
-            FragmentCollectionListBinding.inflate(
+            FragmentCollectionBinding.inflate(
                 inflater,
                 container,
                 false
@@ -181,11 +181,9 @@ class CollectionListFragment : DaggerFragment() {
 
             // set up adapter
             adapter =
-                CollectionListAdapter().apply {
+                ContentFeedListAdapter().apply {
                     setOnItemClickListener(View.OnClickListener {
-                        if (CollectionListAdapter.allowClick()) {
-                            navigateToPlay(index = it.tag as Int)
-                        }
+                        navigateToPlay(index = it.tag as Int)
                     })
                 }
 
@@ -202,8 +200,8 @@ class CollectionListFragment : DaggerFragment() {
      * Update collection feed list
      */
     private fun updateRecyclerView() {
-        (mBinding.recyclerViewCollection.adapter as? CollectionListAdapter)
-            ?.updateDataSource(viewModel = mViewModel)
+        (mBinding.recyclerViewCollection.adapter as? ContentFeedListAdapter)
+            ?.submitList(mViewModel.getContentFeedList())
     }
 
     /* ------------------------------ Navigation */
@@ -216,7 +214,7 @@ class CollectionListFragment : DaggerFragment() {
             .getContentFeed(index = index)
             ?.also {
                 findNavController().navigate(
-                    CollectionListFragmentDirections.navigateToPlay(
+                    CollectionFragmentDirections.navigateToPlay(
                         contentFeed = it
                     )
                 )
