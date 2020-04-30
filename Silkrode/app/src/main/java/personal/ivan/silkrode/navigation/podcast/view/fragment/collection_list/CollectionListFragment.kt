@@ -1,6 +1,7 @@
 package personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
@@ -91,11 +93,6 @@ class CollectionListFragment : DaggerFragment() {
     private fun observeLiveData() {
         mViewModel.apply {
 
-            // request API if needed
-            if (!didCollection(id = mArguments.id)) {
-                requestCollectionApi(id = mArguments.id)
-            }
-
             // app bar layout expand or collapse
             expandCollapsingToolBarLayout.observe(
                 viewLifecycleOwner,
@@ -115,9 +112,9 @@ class CollectionListFragment : DaggerFragment() {
 
     private fun updateFromData() {
         mApiDataLoaded = true
-        loadCoverImage(url = mViewModel.getSelectedCollectionCoverImageUrl())
         setToolbarTitle()
         updateRecyclerView()
+        loadCoverImage()
     }
 
     /* ------------------------------ UI */
@@ -167,12 +164,17 @@ class CollectionListFragment : DaggerFragment() {
 
     /**
      * Loading cover image
+     *
+     * load the image for a short delay to wait transition
      */
-    private fun loadCoverImage(url: String) {
-        glideUtil.loadPodcastCover(
-            imageView = mBinding.imageViewCover,
-            url = url
-        )
+    private fun loadCoverImage() {
+        Handler().postDelayed({
+            val url = mViewModel.getSelectedCollectionCoverImageUrl()
+            glideUtil.loadPodcastCover(
+                imageView = mBinding.imageViewCover,
+                url = url
+            )
+        }, 300)
     }
 
     /**

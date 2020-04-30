@@ -132,10 +132,13 @@ class PodcastListFragment : DaggerFragment() {
         imageView: ImageView,
         id: String
     ) {
+        mViewModel.also {
+            it.setCoverImageExpand(expand = true)
+            it.requestCollectionApi(id = id)
+        }
         findNavController().navigate(
             PodcastListFragmentDirections.navigateToCollectionList(id = id),
             FragmentNavigatorExtras(imageView to id)
         )
-        mViewModel.setCoverImageExpand(expand = true)
     }
 }

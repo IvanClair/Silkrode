@@ -1,5 +1,7 @@
 package personal.ivan.silkrode.api
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
 /* ------------------------------ General API Response */
@@ -10,8 +12,9 @@ data class PodcastApiResponse<T>(val data: T?)
 
 data class PodcastData(@field:Json(name = "podcast") val podcastList: List<Podcast>?)
 
+@Entity
 data class Podcast(
-    val id: String?,
+    @PrimaryKey val id: String,
     val artistName: String?,
     @field:Json(name = "artworkUrl100") val coverImgUrl: String?,
     @field:Json(name = "name") val channelName: String?
@@ -21,7 +24,9 @@ data class Podcast(
 
 data class CollectionData(val collection: Collection?)
 
+@Entity
 data class Collection(
+    @PrimaryKey val collectionId: Int,
     @field:Json(name = "artworkUrl600") val bigCoverImgUrl: String?,
     val collectionName: String?,
     @field:Json(name = "contentFeed") val contentFeedList: List<ContentFeed>?,
