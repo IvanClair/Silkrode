@@ -6,12 +6,10 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import personal.ivan.silkrode.api.Podcast
 import personal.ivan.silkrode.databinding.VhPodcastBinding
+import personal.ivan.silkrode.di.GlideApp
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
-import personal.ivan.silkrode.util.GlideUtil
-import javax.inject.Inject
 
-class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
-    RecyclerView.Adapter<PodcastListAdapter.ViewHolder>() {
+class PodcastListAdapter : RecyclerView.Adapter<PodcastListAdapter.ViewHolder>() {
 
     // Data Source
     // todo easy to extend, e.g. sort by artist, topic ... etc
@@ -67,7 +65,6 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
             ?.also {
                 holder.bind(
                     data = it,
-                    glideUtil = mUtil,
                     listener = mListener
                 )
             }
@@ -102,7 +99,6 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
 
         fun bind(
             data: Podcast,
-            glideUtil: GlideUtil,
             listener: OnPodcastItemClickListener?
         ) {
             mBinding.apply {
@@ -116,7 +112,10 @@ class PodcastListAdapter @Inject constructor(private val mUtil: GlideUtil) :
                 }
                 imageViewCover.apply {
                     transitionName = data.id
-                    glideUtil.loadPodcastCover(imageView = this, url = data.coverImgUrl)
+                    GlideApp
+                        .with(this)
+                        .load(data.coverImgUrl)
+                        .into(this)
                 }
                 textViewArtistName.text = data.artistName
                 textViewPodcastName.text = data.channelName

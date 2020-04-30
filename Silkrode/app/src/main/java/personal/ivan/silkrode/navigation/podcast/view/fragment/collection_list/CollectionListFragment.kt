@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.transition.Transition
 import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
@@ -18,10 +17,10 @@ import personal.ivan.silkrode.R
 import personal.ivan.silkrode.api.ApiStatus
 import personal.ivan.silkrode.databinding.FragmentCollectionListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
+import personal.ivan.silkrode.di.GlideApp
 import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
-import personal.ivan.silkrode.util.GlideUtil
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -31,10 +30,6 @@ class CollectionListFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: AppViewModelFactory
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
-
-    // Glide
-    @Inject
-    lateinit var glideUtil: GlideUtil
 
     // View Binding
     private lateinit var mBinding: FragmentCollectionListBinding
@@ -169,11 +164,12 @@ class CollectionListFragment : DaggerFragment() {
      */
     private fun loadCoverImage() {
         Handler().postDelayed({
-            val url = mViewModel.getSelectedCollectionCoverImageUrl()
-            glideUtil.loadPodcastCover(
-                imageView = mBinding.imageViewCover,
-                url = url
-            )
+            mBinding.imageViewCover.apply {
+                GlideApp
+                    .with(this)
+                    .load(mViewModel.getSelectedCollectionCoverImageUrl())
+                    .into(this)
+            }
         }, 300)
     }
 

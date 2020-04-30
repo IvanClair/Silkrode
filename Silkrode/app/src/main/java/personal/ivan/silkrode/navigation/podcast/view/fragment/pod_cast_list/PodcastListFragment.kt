@@ -27,10 +27,6 @@ class PodcastListFragment : DaggerFragment() {
     lateinit var viewModelFactory: AppViewModelFactory
     private val mViewModel: PodcastViewModel by activityViewModels { viewModelFactory }
 
-    // Adapter
-    @Inject
-    lateinit var podcastListAdapter: PodcastListAdapter
-
     // View Binding
     private lateinit var mBinding: FragmentPodcastListBinding
 
@@ -95,16 +91,18 @@ class PodcastListFragment : DaggerFragment() {
             layoutManager = GridLayoutManager(context, 2)
 
             // set up adapter
-            adapter = podcastListAdapter
-            podcastListAdapter.setOnItemClickListener(object :
-                PodcastListAdapter.OnPodcastItemClickListener {
-                override fun onClick(
-                    imageView: ImageView,
-                    id: String
-                ) {
-                    navigateToCollectionList(imageView = imageView, id = id)
+            adapter =
+                PodcastListAdapter().apply {
+                    setOnItemClickListener(object :
+                        PodcastListAdapter.OnPodcastItemClickListener {
+                        override fun onClick(
+                            imageView: ImageView,
+                            id: String
+                        ) {
+                            navigateToCollectionList(imageView = imageView, id = id)
+                        }
+                    })
                 }
-            })
 
             // return transition
             postponeEnterTransition()

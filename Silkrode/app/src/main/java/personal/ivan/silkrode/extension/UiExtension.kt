@@ -1,9 +1,10 @@
+@file:JvmName("UiExtension")
+
 package personal.ivan.silkrode.extension
 
 import android.content.Context
 import android.view.View
 import android.widget.ImageView
-import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import personal.ivan.silkrode.R

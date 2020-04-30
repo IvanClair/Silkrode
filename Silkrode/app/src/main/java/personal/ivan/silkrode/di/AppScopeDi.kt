@@ -1,9 +1,13 @@
 package personal.ivan.silkrode.di
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
+import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import dagger.*
 import dagger.android.AndroidInjectionModule
@@ -16,7 +20,6 @@ import personal.ivan.silkrode.SilkrodeApplication
 import personal.ivan.silkrode.db.AppDb
 import personal.ivan.silkrode.navigation.podcast.di.PodcastActivityModule
 import personal.ivan.silkrode.util.DateFormatUtil
-import personal.ivan.silkrode.util.GlideUtil
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -32,7 +35,6 @@ import kotlin.reflect.KClass
         ViewModelModule::class,
         DbModule::class,
         RetrofitModule::class,
-        GlideModule::class,
         UtilModule::class,
         PodcastActivityModule::class
     ]
@@ -148,45 +150,25 @@ object RetrofitModule {
 
 /* ------------------------------ Glide */
 
-@Module
-object GlideModule {
+@com.bumptech.glide.annotation.GlideModule
+class MyGlideModule : AppGlideModule() {
 
-    /**
-     * [RequestOptions]
-     */
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideGlideRequestOptions() =
-        RequestOptions()
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_foreground)
-            .fallback(R.drawable.ic_launcher_foreground)
-
-
-    /**
-     * [DrawableTransitionOptions]
-     */
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideGlideTransitionOptions() =
-        DrawableTransitionOptions.withCrossFade()
-
-    /**
-     * [GlideUtil]
-     */
-    @JvmStatic
-    @Singleton
-    @Provides
-    fun provideGlideUtil(
-        options: RequestOptions,
-        transitionOptions: DrawableTransitionOptions
-    ) =
-        GlideUtil(
-            mRequestOptions = options,
-            mTransitionOptions = transitionOptions
-        )
+    override fun applyOptions(
+        context: Context,
+        builder: GlideBuilder
+    ) {
+        builder
+            .setDefaultRequestOptions(
+                RequestOptions()
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .error(R.drawable.ic_launcher_foreground)
+                    .fallback(R.drawable.ic_launcher_foreground)
+            )
+            .setDefaultTransitionOptions(
+                Drawable::class.java,
+                DrawableTransitionOptions.withCrossFade()
+            )
+    }
 }
 
 /* ------------------------------ Util */
