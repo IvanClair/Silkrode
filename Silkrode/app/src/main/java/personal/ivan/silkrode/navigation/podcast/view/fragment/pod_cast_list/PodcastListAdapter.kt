@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import personal.ivan.silkrode.api.Podcast
+import personal.ivan.silkrode.io.model.Podcast
 import personal.ivan.silkrode.databinding.VhPodcastBinding
 import personal.ivan.silkrode.di.GlideApp
 

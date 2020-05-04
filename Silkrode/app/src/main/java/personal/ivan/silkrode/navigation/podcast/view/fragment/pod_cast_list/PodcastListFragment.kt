@@ -11,12 +11,12 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import dagger.android.support.DaggerFragment
-import personal.ivan.silkrode.api.ApiStatus
+import personal.ivan.silkrode.io.model.ApiStatus
 import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.extension.showApiErrorAlert
-import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.collection.CollectionFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
 

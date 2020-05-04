@@ -17,7 +17,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import personal.ivan.silkrode.BuildConfig
 import personal.ivan.silkrode.R
 import personal.ivan.silkrode.SilkrodeApplication
-import personal.ivan.silkrode.db.AppDb
+import personal.ivan.silkrode.io.db.AppDb
 import personal.ivan.silkrode.navigation.podcast.di.PodcastActivityModule
 import personal.ivan.silkrode.util.DateFormatUtil
 import retrofit2.Retrofit

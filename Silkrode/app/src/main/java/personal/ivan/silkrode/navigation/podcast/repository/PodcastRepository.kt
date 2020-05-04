@@ -1,10 +1,15 @@
-package personal.ivan.silkrode.api
+package personal.ivan.silkrode.navigation.podcast.repository
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import personal.ivan.silkrode.db.CollectionDao
-import personal.ivan.silkrode.db.PodcastDao
+import personal.ivan.silkrode.io.db.CollectionDao
+import personal.ivan.silkrode.io.db.PodcastDao
+import personal.ivan.silkrode.io.model.ApiStatus
+import personal.ivan.silkrode.io.component.IoComponent
+import personal.ivan.silkrode.io.model.Collection
+import personal.ivan.silkrode.io.model.Podcast
+import personal.ivan.silkrode.io.network.PodcastApiService
 import personal.ivan.silkrode.navigation.podcast.model.CollectionBindingModel
 import personal.ivan.silkrode.util.DateFormatUtil
 import javax.inject.Inject
@@ -20,7 +25,7 @@ class PodcastRepository @Inject constructor(
      * Get podcast list
      */
     fun getPodcastList() =
-        object : ApiUtil<List<Podcast>, List<Podcast>>() {
+        object : IoComponent<List<Podcast>, List<Podcast>>() {
             override suspend fun loadFromDb(): List<Podcast>? =
                 mPodcastDao.loadAll()
 
@@ -51,7 +56,7 @@ class PodcastRepository @Inject constructor(
                 }
             }
 
-        return object : ApiUtil<Collection, CollectionBindingModel>() {
+        return object : IoComponent<Collection, CollectionBindingModel>() {
             override suspend fun loadFromDb(): Collection? =
                 mCollectionDao.load(id = collectionId)
 

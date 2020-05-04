@@ -3,8 +3,8 @@ package personal.ivan.silkrode.navigation.podcast.model
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.IntDef
-import personal.ivan.silkrode.api.Collection
-import personal.ivan.silkrode.api.ContentFeed
+import personal.ivan.silkrode.io.model.Collection
+import personal.ivan.silkrode.io.model.ContentFeed
 import personal.ivan.silkrode.util.DateFormatUtil
 
 /* ------------------------------ Page Binding Model */

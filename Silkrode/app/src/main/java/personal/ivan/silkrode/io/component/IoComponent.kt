@@ -1,12 +1,13 @@
-package personal.ivan.silkrode.api
+package personal.ivan.silkrode.io.component
 
 import androidx.lifecycle.liveData
+import personal.ivan.silkrode.io.model.ApiStatus
 
 /**
  * @param S source from network or database
  * @param R result of output
  */
-abstract class ApiUtil<S, R> {
+abstract class IoComponent<S, R> {
 
     // Result LiveData
     private val resultLiveData =
