@@ -1,8 +1,8 @@
-package personal.ivan.silkrode.db
+package personal.ivan.silkrode.io.db
 
 import androidx.room.*
-import personal.ivan.silkrode.api.Collection
-import personal.ivan.silkrode.api.Podcast
+import personal.ivan.silkrode.io.model.Collection
+import personal.ivan.silkrode.io.model.Podcast
 
 /* ------------------------------ Database */
 

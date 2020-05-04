@@ -9,8 +9,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
 import personal.ivan.silkrode.SilkrodeApplication
-import personal.ivan.silkrode.api.Podcast
-import personal.ivan.silkrode.api.PodcastRepository
+import personal.ivan.silkrode.io.model.Podcast
+import personal.ivan.silkrode.navigation.podcast.repository.PodcastRepository
 import personal.ivan.silkrode.navigation.podcast.model.CollectionVhBindingModel
 import personal.ivan.silkrode.service.PodcastAudioService
 import javax.inject.Inject

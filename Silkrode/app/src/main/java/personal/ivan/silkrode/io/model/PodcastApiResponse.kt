@@ -1,4 +1,4 @@
-package personal.ivan.silkrode.api
+package personal.ivan.silkrode.io.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,5 +1,8 @@
-package personal.ivan.silkrode.api
+package personal.ivan.silkrode.io.network
 
+import personal.ivan.silkrode.io.model.CollectionData
+import personal.ivan.silkrode.io.model.PodcastApiResponse
+import personal.ivan.silkrode.io.model.PodcastData
 import retrofit2.http.GET
 
 interface PodcastApiService {

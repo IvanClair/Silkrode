@@ -1,4 +1,4 @@
-package personal.ivan.silkrode.api
+package personal.ivan.silkrode.io.model
 
 import androidx.annotation.StringDef
 
@@ -25,16 +25,25 @@ data class ApiStatus<out T>(
         /**
          * Create success status
          */
-        fun <T> success(data: T) = ApiStatus(status = SUCCESS, data = data)
+        fun <T> success(data: T) = ApiStatus(
+            status = SUCCESS,
+            data = data
+        )
 
         /**
          * Create fail status
          */
-        fun fail() = ApiStatus(status = FAIL, data = null)
+        fun fail() = ApiStatus(
+            status = FAIL,
+            data = null
+        )
 
         /**
          * Create loading status
          */
-        fun loading() = ApiStatus(status = LOADING, data = null)
+        fun loading() = ApiStatus(
+            status = LOADING,
+            data = null
+        )
     }
 }

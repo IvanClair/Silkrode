@@ -1,11 +1,11 @@
-package personal.ivan.silkrode.db
+package personal.ivan.silkrode.io.db
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.ToJson
 import com.squareup.moshi.Types
-import personal.ivan.silkrode.api.ContentFeed
+import personal.ivan.silkrode.io.model.ContentFeed
 
 class DbTypeConverter {
 

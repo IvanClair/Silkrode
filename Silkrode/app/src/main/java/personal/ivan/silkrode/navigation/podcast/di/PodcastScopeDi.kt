@@ -6,10 +6,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import personal.ivan.silkrode.api.PodcastApiService
-import personal.ivan.silkrode.api.PodcastRepository
-import personal.ivan.silkrode.db.CollectionDao
-import personal.ivan.silkrode.db.PodcastDao
+import personal.ivan.silkrode.io.network.PodcastApiService
+import personal.ivan.silkrode.navigation.podcast.repository.PodcastRepository
+import personal.ivan.silkrode.io.db.CollectionDao
+import personal.ivan.silkrode.io.db.PodcastDao
 import personal.ivan.silkrode.di.ViewModelKey
 import personal.ivan.silkrode.navigation.podcast.view.PodcastActivity
 import personal.ivan.silkrode.navigation.podcast.view.fragment.PlayFragment

@@ -14,7 +14,7 @@ import androidx.transition.TransitionInflater
 import com.google.android.material.appbar.AppBarLayout
 import dagger.android.support.DaggerFragment
 import personal.ivan.silkrode.R
-import personal.ivan.silkrode.api.ApiStatus
+import personal.ivan.silkrode.io.model.ApiStatus
 import personal.ivan.silkrode.databinding.FragmentCollectionBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.di.GlideApp

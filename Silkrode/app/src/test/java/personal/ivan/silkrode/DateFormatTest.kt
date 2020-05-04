@@ -2,8 +2,8 @@ package personal.ivan.silkrode
 
 import org.junit.Assert
 import org.junit.Test
-import personal.ivan.silkrode.api.Collection
-import personal.ivan.silkrode.api.ContentFeed
+import personal.ivan.silkrode.io.model.Collection
+import personal.ivan.silkrode.io.model.ContentFeed
 import personal.ivan.silkrode.util.DateFormatUtil
 
 class DateFormatTest {
