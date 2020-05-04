@@ -16,7 +16,7 @@ import personal.ivan.silkrode.databinding.FragmentPodcastListBinding
 import personal.ivan.silkrode.di.AppViewModelFactory
 import personal.ivan.silkrode.extension.enableOrDisable
 import personal.ivan.silkrode.extension.showApiErrorAlert
-import personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionFragment
+import personal.ivan.silkrode.navigation.podcast.view.fragment.collection.CollectionFragment
 import personal.ivan.silkrode.navigation.podcast.viewmodel.PodcastViewModel
 import javax.inject.Inject
 

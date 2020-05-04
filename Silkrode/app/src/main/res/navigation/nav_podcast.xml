@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/collectionFragment"
-        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list.CollectionFragment"
+        android:name="personal.ivan.silkrode.navigation.podcast.view.fragment.collection.CollectionFragment"
         android:label="collectionFragment"
         tools:layout="@layout/fragment_collection">
         <action

@@ -1,4 +1,4 @@
-package personal.ivan.silkrode.navigation.podcast.view.fragment.collection_list
+package personal.ivan.silkrode.navigation.podcast.view.fragment.collection
 
 import android.os.Bundle
 import android.os.Handler
